@@ -1,0 +1,18 @@
+﻿Testing connection to: https://jfbejuieubybiwwukxmi.supabase.co
+node : (node:23152) [DEP0040] DeprecationWarning: 
+The `punycode` module is deprecated. Please use a 
+userland alternative instead.
+At line:1 char:1
++ node diag_supabase.js > diag_output.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((nod 
+   e:23152) [D...native instead.:String) [], Rem  
+  oteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+(Use `node --trace-deprecation ...` to show where 
+the warning was created)
+Fetch failed: network timeout at: 
+https://jfbejuieubybiwwukxmi.supabase.co/
+Testing Supabase client query...
+Supabase client failed: TypeError: fetch failed

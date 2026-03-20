@@ -1,0 +1,168 @@
+/* ═══════════════════════════════════════════════════════════════
+   admin_tools.css — Admin Panel Components v4 (Premium Edition)
+   Mobile-First · Glassmorphism · Animated
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Admin Sections ── */
+.admin-section { display: none; width: 100%; }
+.admin-section.active { display: block; animation: fadeSlideUp .45s cubic-bezier(.22,1,.36,1); }
+
+/* ── Analytics Grid ── */
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+/* ── Analytics Cards (Premium Glass) ── */
+.analytics-card {
+    padding: 18px 14px;
+    border-radius: var(--r-lg);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    position: relative; overflow: hidden;
+    transition: all .3s cubic-bezier(.22,1,.36,1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+.analytics-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    opacity: 0; transition: opacity .3s, width .5s;
+    width: 0;
+}
+.analytics-card::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(37,99,235,.04), transparent 50%);
+    pointer-events: none;
+}
+.analytics-card:hover {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 12px 32px rgba(0,0,0,.3), 0 0 20px rgba(37,99,235,.06);
+    border-color: rgba(37,99,235,.2);
+}
+.analytics-card:hover::before { opacity: 1; width: 100%; }
+
+.analytics-num {
+    font-size: 1.6rem; font-weight: 800;
+    letter-spacing: -.03em;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block; margin-bottom: 2px;
+}
+.analytics-label {
+    font-size: .68rem; color: var(--text3);
+    font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+}
+
+/* ── Audit Log Rows ── */
+.log-row {
+    display: flex; align-items: flex-start;
+    gap: 8px; padding: 10px 12px;
+    border-bottom: 1px solid var(--glass-border);
+    font-size: .8rem; transition: all .15s;
+    flex-wrap: wrap; border-radius: var(--r-sm);
+}
+.log-row:last-child { border-bottom: none; }
+.log-row:hover { background: var(--glass-hover); transform: translateX(3px); }
+
+.log-badge {
+    display: inline-flex; align-items: center;
+    padding: 2px 8px; border-radius: var(--r-pill);
+    font-size: .62rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .04em;
+    white-space: nowrap; flex-shrink: 0;
+}
+
+/* Action badge colors */
+.log-action-CREATE_USER, .log-action-ADMIN_LOGIN {
+    background: rgba(52,211,153,.1); color: #34d399; border: 1px solid rgba(52,211,153,.2);
+}
+.log-action-DELETE_USER, .log-action-DELETE_RECIPE {
+    background: rgba(239,68,68,.1); color: #f87171; border: 1px solid rgba(239,68,68,.2);
+}
+.log-action-FEATURE_RECIPE {
+    background: rgba(251,146,60,.1); color: #fb923c; border: 1px solid rgba(251,146,60,.2);
+}
+.log-action-UNFEATURE_RECIPE {
+    background: rgba(148,163,184,.06); color: var(--text3); border: 1px solid var(--glass-border);
+}
+
+/* ── Feedback DM System ── */
+.dm-container {
+    display: flex; flex-direction: column;
+    height: 100%; border-radius: var(--r-lg); overflow: hidden;
+}
+.dm-sidebar-item {
+    padding: 12px 14px; display: flex; align-items: center;
+    gap: 10px; cursor: pointer;
+    transition: all .15s; border-bottom: 1px solid var(--glass-border);
+    font-size: .86rem; position: relative;
+}
+.dm-sidebar-item:hover, .dm-sidebar-item.active {
+    background: var(--glass-hover);
+}
+.dm-sidebar-item:hover { transform: translateX(3px); }
+.dm-sidebar-item.unread { border-left: 3px solid var(--primary); padding-left: 11px; }
+.dm-sidebar-item.unread::after {
+    content: ''; position: absolute; right: 14px; top: 50%;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--primary); transform: translateY(-50%);
+    box-shadow: 0 0 6px var(--primary-glow);
+}
+
+/* ── DM Bubbles ── */
+.dm-bubble {
+    padding: 10px 14px; border-radius: var(--r-md);
+    max-width: 85%; font-size: .84rem;
+    position: relative; line-height: 1.5; word-break: break-word;
+    animation: fadeSlideUp .3s cubic-bezier(.22,1,.36,1);
+}
+.dm-bubble.admin {
+    align-self: flex-end;
+    background: linear-gradient(135deg, var(--primary), #4f46e5);
+    color: white; border-bottom-right-radius: 4px;
+    box-shadow: 0 3px 12px var(--primary-glow);
+}
+.dm-bubble.user {
+    align-self: flex-start;
+    background: var(--bg3); color: var(--text1);
+    border-bottom-left-radius: 4px;
+    border: 1px solid var(--glass-border);
+}
+
+/* ── Legacy log items ── */
+.log-item {
+    padding: 10px; border-bottom: 1px solid var(--glass-border);
+    display: flex; gap: 10px; font-size: .8rem;
+}
+.log-time { color: var(--text3); white-space: nowrap; font-size: .72rem; }
+.log-action { font-weight: 600; }
+
+/* ── Spinner ── */
+.spinner {
+    width: 26px; height: 26px;
+    border: 2px solid var(--glass-border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    margin: 16px auto;
+}
+
+/* ═══ RESPONSIVE ═══ */
+@media (min-width: 640px) {
+    .analytics-grid { gap: 14px; }
+    .analytics-num { font-size: 1.8rem; }
+    .dm-container { flex-direction: row; }
+    .dm-bubble { max-width: 72%; }
+    .log-row { flex-wrap: nowrap; }
+}
+
+@media (min-width: 1024px) {
+    .analytics-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; }
+    .analytics-card { padding: 24px 20px; }
+    .analytics-num { font-size: 2rem; }
+}

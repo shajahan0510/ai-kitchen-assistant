@@ -1,0 +1,18 @@
+--- Forced Auth Test ---
+Timestamp: 2026-02-21T15:11:04.970Z
+CWD: C:\Users\acer\.gemini\antigravity\scratch\ai-kitchen-assistant
+SUPABASE_URL: https://jfbejuieubybiwwukxmi.supabase.co
+SUPABASE_SERVICE_KEY length: 219
+
+1. Checking Auth Users...
+✅ Found 4 users in Auth.
+   - admin@kitchen.ai (8211561e-7a9f-4861-aa09-d78d2f026c37)
+   - avvikutty126@gmail.com (329a3a13-d1fb-400d-92bd-c0f0ec9a102d)
+   - joebinjoebin6@gmail.com (e80c40be-dd1b-4e7b-ba44-bcd2c2946ff6)
+   - shaj@gmail.com (e0b08b28-6e43-4310-a4b9-e4b4599e1ff3)
+✅ admin@kitchen.ai is in Auth table.
+
+3. Verifying Profile role...
+✅ Profile found. Role: admin
+
+--- Test Complete ---

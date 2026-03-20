@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Portal — AI Kitchen Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/admin_tools.css" />
+</head>
+
+<body>
+    <div id="toastContainer"
+        style="position:fixed; bottom:24px; right:24px; display:flex; flex-direction:column; gap:12px; z-index:2000;">
+    </div>
+
+    <!-- ══ ADMIN LOGIN OVERLAY ══ -->
+    <div id="adminLoginOverlay" class="auth-page" style="display:flex; background:var(--bg1); z-index: 2000;">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="auth-card glass">
+            <div class="brand" style="text-align:center; margin-bottom: 40px;">
+                <div style="font-size: 3rem; margin-bottom: 15px;">🛡️</div>
+                <h1 style="font-size: 2rem; margin-bottom: 8px;">Admin Portal</h1>
+                <p style="color: var(--text2); font-size: 0.95rem;">Secure access for administrators</p>
+            </div>
+            <div id="adminAlert" class="alert" style="display:none;"></div>
+            <form onsubmit="adminLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">Admin Email</label>
+                    <input id="adminEmail" type="email" class="form-input" placeholder="admin@example.com" required
+                        autocomplete="email" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input id="adminPassword" type="password" class="form-input" placeholder="Admin password" required
+                        autocomplete="current-password" />
+                </div>
+                <button id="adminLoginBtn" type="submit" class="btn btn-primary btn-block">
+                    <span class="btn-text">🛡️ Access Admin Portal</span>
+                    <span class="btn-loader" style="display:none;">⏳</span>
+                </button>
+            </form>
+            <div style="text-align:center; margin-top: 32px; font-size: 0.875rem; color: var(--text3);">
+                <a href="index.html" class="text-gradient" style="font-weight:600;">← Back to main site</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ ADMIN DASHBOARD ══ -->
+    <div id="adminDashboard" class="dashboard-wrapper" style="display:none;">
+        <!-- Ambient Background -->
+        <div class="ambient-blob blob-1"></div>
+        <div class="ambient-blob blob-2"></div>
+        <div class="ambient-blob blob-3"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div style="padding: 0 28px; margin-bottom: 40px; display:flex; align-items:center; gap:12px;">
+                <div style="font-size: 2rem;">🛡️</div>
+                <div class="text-gradient" style="font-weight:800; font-size: 1.25rem;">Admin</div>
+            </div>
+
+            <div style="padding: 0 24px; margin-bottom: 32px;">
+                <div style="display:flex; align-items:center; gap:12px; padding: 16px 18px;
+                    background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(245,158,11,0.04));
+                    border: 1px solid rgba(245, 158, 11, 0.25);
+                    border-radius: var(--radius-lg);
+                    box-shadow: 0 4px 16px rgba(245,158,11,0.08);">
+                    <div id="adminAvatar" class="avatar"
+                        style="border-color: var(--warning); box-shadow: 0 0 0 3px rgba(245,158,11,0.2);">A</div>
+                    <div>
+                        <div id="adminUsername" style="font-weight:700; font-size:0.95rem;">Admin</div>
+                        <div style="font-size:0.75rem; color:var(--warning); font-weight:600;">⭐ Administrator</div>
+                    </div>
+                </div>
+            </div>
+
+            <nav>
+                <div class="nav-group">
+                    <div class="nav-label">Management</div>
+                    <button class="nav-item active" onclick="showAdminSection('analytics', this)">📊 Analytics</button>
+                    <button class="nav-item" onclick="showAdminSection('users', this)">👥 Users</button>
+                    <button class="nav-item" onclick="showAdminSection('recipes', this)">🍳 Recipes</button>
+                    <button class="nav-item" onclick="showAdminSection('logs', this)">📋 Audit Logs</button>
+                    <button class="nav-item" onclick="showAdminSection('feedback', this)">📬 Feedback Inbox</button>
+                </div>
+            </nav>
+
+            <div style="margin-top:auto; padding: 24px; border-top: 1px solid var(--glass-border);">
+                <button id="adminThemeBtn" class="btn btn-ghost btn-block" onclick="toggleTheme()"
+                    style="justify-content:flex-start; margin-bottom: 8px;">🌙 Dark</button>
+                <button class="btn btn-ghost btn-block" onclick="adminLogout()"
+                    style="justify-content:flex-start; color: var(--danger);">🚪 Sign Out</button>
+            </div>
+        </aside>
+
+        <div class="main-content">
+            <header class="topbar">
+                <div style="display:flex; align-items:center; gap:16px;">
+                    <button class="btn btn-ghost" onclick="document.getElementById('sidebar').classList.toggle('open')" style="padding:8px; font-size:1.25rem;">☰</button>
+                    <h2 id="adminTopbarTitle" style="font-size:1.3rem;">📊 Analytics</h2>
+                </div>
+            </header>
+
+            <div class="section-container">
+                <!-- ── Analytics ── -->
+                <section id="admin-analytics" class="admin-section active">
+                    <div id="analyticsGrid" class="analytics-grid">
+                        <div class="spinner"></div>
+                    </div>
+                    <div class="glass" style="margin-top:24px; overflow: hidden;">
+                        <h4 style="padding:24px 24px 0;">🏆 Top Rated Recipes</h4>
+                        <div style="overflow-x:auto;">
+                            <table class="admin-table" style="border-collapse: separate; border-spacing: 0 12px;">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Title</th>
+                                        <th>Author</th>
+                                        <th>Views</th>
+                                        <th>Likes</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="topRecipesTbody">
+                                    <tr>
+                                        <td colspan="5" style="text-align:center;padding:40px;color:var(--text3);">
+                                            Loading statistics...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── Users ── -->
+                <section id="admin-users" class="admin-section">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+                        <input type="text" class="form-input" placeholder="🔍 Search users..." style="max-width:400px;"
+                            oninput="filterUsers(this.value)" />
+                        <button class="btn btn-primary" onclick="showAddUserModal()">+ Add User</button>
+                    </div>
+                    <div class="glass" style="overflow: hidden;">
+                        <div style="overflow-x:auto;">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Username</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Joined</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTbody">
+                                    <tr>
+                                        <td colspan="5" style="text-align:center;padding:40px;color:var(--text3);">
+                                            Loading user database...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── Recipes ── -->
+                <section id="admin-recipes" class="admin-section">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+                        <input type="text" class="form-input" placeholder="🔍 Search official recipes..."
+                            style="max-width:400px;" oninput="filterAdminRecipes(this.value)" />
+                        <button class="btn btn-primary" onclick="showAddRecipeModal()">+ Create Recipe</button>
+                    </div>
+                    <div class="glass" style="overflow: hidden;">
+                        <div style="overflow-x:auto;">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Author</th>
+                                        <th>Category</th>
+                                        <th>Views</th>
+                                        <th>Likes</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminRecipesTbody">
+                                    <tr>
+                                        <td colspan="7" style="text-align:center;padding:40px;color:var(--text3);">
+                                            Loading recipe database...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── Audit Logs ── -->
+                <section id="admin-logs" class="admin-section">
+                    <div class="glass" style="padding:24px;">
+                        <h4 style="margin-bottom:20px;">📋 Audit Logs & System Actions</h4>
+                        <div id="logsContainer"></div>
+                    </div>
+                </section>
+
+                <!-- ── Feedback Inbox ── -->
+                <section id="admin-feedback" class="admin-section" style="height: calc(100vh - 150px);">
+                    <div class="glass dm-container" style="height:100%; display:flex;">
+                        <div class="dm-sidebar"
+                            style="width:320px; border-right:1px solid var(--glass-border); display:flex; flex-direction:column; min-height:0;">
+                            <div
+                                style="padding:20px; border-bottom:1px solid var(--glass-border); display:flex; justify-content:space-between; align-items:center;">
+                                <h3 style="font-size:1.1rem;">Messages</h3>
+                                <button class="btn btn-ghost btn-sm" onclick="loadFeedbackInbox()">🔄</button>
+                            </div>
+                            <div id="dmList" style="flex:1; overflow-y:auto;">
+                                <div class="spinner"></div>
+                            </div>
+                        </div>
+                        <div id="dmChatArea" style="flex:1; display:flex; flex-direction:column; min-height:0;">
+                            <div id="dmEmptyState"
+                                style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--text3);">
+                                <div style="font-size:4rem; margin-bottom:16px;">💬</div>
+                                <h3>Select a conversation</h3>
+                                <p>Pick a user from the list to reply to feedback</p>
+                            </div>
+
+                            <div id="dmActiveChat" style="display:none; flex:1; flex-direction:column; min-height:0;">
+                                <div
+                                    style="padding:16px 24px; border-bottom:1px solid var(--glass-border); display:flex; align-items:center; gap:12px;">
+                                    <div id="dmActiveAvatar" class="avatar">?</div>
+                                    <h4 id="dmActiveUsername">User Name</h4>
+                                </div>
+                                <div id="dmChatContent"
+                                    style="flex:1; overflow-y:auto; padding:24px; display:flex; flex-direction:column; gap:16px;">
+                                </div>
+
+                                <div style="padding:12px 24px; border-top: 1px solid var(--glass-border);">
+                                    <div style="display:flex; gap:8px; margin-bottom:12px; overflow-x:auto;">
+                                        <button class="btn btn-secondary btn-sm"
+                                            onclick="sendQuickReply('💖 Thank you for your feedback!')">💖
+                                            Thanks</button>
+                                        <button class="btn btn-secondary btn-sm"
+                                            onclick="sendQuickReply('👌 We are looking into this!')">👌 OK</button>
+                                        <button class="btn btn-secondary btn-sm"
+                                            onclick="sendQuickReply('✅ This has been resolved.')">✅ Fixed</button>
+                                    </div>
+                                    <div style="display:flex; gap:12px; align-items:center;">
+                                        <textarea id="dmChatInput" class="form-input" placeholder="Type your reply..."
+                                            rows="1" style="flex:1; max-height:100px;"></textarea>
+                                        <button class="btn btn-primary" onclick="adminSendMessage()">Send</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="addUserModal" class="modal-overlay" onclick="if(event.target===this) closeAddUserModal()">
+        <div class="modal-content glass" style="max-width:440px;">
+            <button onclick="closeAddUserModal()"
+                style="position:absolute; top:20px; right:20px; color:var(--text3);">✕</button>
+            <h3 style="margin-bottom:24px;">👤 Add New User</h3>
+            <div id="addUserAlert" class="alert" style="display:none;"></div>
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input id="newUsername" type="text" class="form-input" placeholder="chefmaster" required />
+            </div>
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input id="newUserEmail" type="email" class="form-input" placeholder="user@example.com" required />
+            </div>
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input id="newUserPassword" type="password" class="form-input" placeholder="Min 8 characters"
+                    required />
+            </div>
+            <div class="form-group">
+                <label class="form-label">Role</label>
+                <select id="newUserRole" class="form-input">
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <button id="addUserBtn" class="btn btn-primary btn-block" onclick="addUser()">Create User</button>
+        </div>
+    </div>
+
+    <div id="addRecipeModal" class="modal-overlay" onclick="if(event.target===this) closeAddRecipeModal()">
+        <div class="modal-content glass">
+            <button onclick="closeAddRecipeModal()"
+                style="position:absolute; top:24px; right:24px; color:var(--text3);">✕</button>
+            <h3 style="margin-bottom:24px;">🍳 Create Official Recipe</h3>
+            <div id="adminRecipeAlert" class="alert" style="display:none;"></div>
+            <form id="adminRecipeForm" onsubmit="adminAddRecipe(event)">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                    <div class="form-group">
+                        <label class="form-label">Title *</label>
+                        <input id="adminRecipeTitle" type="text" class="form-input" required />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category *</label>
+                        <select id="adminRecipeCategory" class="form-input" required>
+                            <option value="">Select...</option>
+                            <option>Breakfast</option>
+                            <option>Lunch</option>
+                            <option>Dinner</option>
+                            <option>Snack</option>
+                            <option>Dessert</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                    <div class="form-group">
+                        <label class="form-label">Cuisine</label>
+                        <input id="adminRecipeCuisine" type="text" class="form-input" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Cooking Time *</label>
+                        <input id="adminRecipeTime" type="text" class="form-input" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description *</label>
+                    <textarea id="adminRecipeDesc" class="form-input" rows="2" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Ingredients * (one per line)</label>
+                    <textarea id="adminRecipeIngredients" class="form-input" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Steps * (one per line)</label>
+                    <textarea id="adminRecipeSteps" class="form-input" rows="5" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+                        <input id="adminRecipeFeatured" type="checkbox" style="width:20px;height:20px;" />
+                        🌟 Mark as Featured Official Recipe
+                    </label>
+                </div>
+                <button id="adminAddRecipeBtn" type="submit" class="btn btn-primary btn-block">Publish
+                    Officially</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <title>Smart AI Kitchen Assistant</title>
+</head>
+
+<body>
+    <div class="dashboard-wrapper">
+        <!-- Ambient Background (Controlled via CSS) -->
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <div class="sidebar-logo-icon">🍳</div>
+                <div class="sidebar-logo-text">Smart Kitchen</div>
+            </div>
+
+            <nav>
+                <div class="nav-group">
+                    <div class="nav-label">Main</div>
+                    <a href="#" class="nav-item active" data-section="suggest" onclick="showSection('suggest', this)">
+                        <span>🛎️</span> AI Suggestions
+                    </a>
+                    <a href="#" class="nav-item" data-section="trending" onclick="showSection('trending', this)">
+                        <span>🔥</span> Trending Recipes
+                    </a>
+                    <a href="#" class="nav-item" data-section="discover" onclick="showSection('discover', this)">
+                        <span>🌍</span> Community Feed
+                    </a>
+                </div>
+
+                <div class="nav-group">
+                    <div class="nav-label">Chef's Tools</div>
+                    <a href="#" class="nav-item" data-section="scanner" onclick="showSection('scanner', this)">
+                        <span>📸</span> Fridge Scanner
+                    </a>
+                    <a href="#" class="nav-item" data-section="snaprecipe" onclick="showSection('snaprecipe', this)">
+                        <span>🍳</span> Snap & Cook
+                    </a>
+                    <a href="#" class="nav-item" data-section="pantry" onclick="showSection('pantry', this)">
+                        <span>🥫</span> Smart Pantry
+                    </a>
+                    <a href="#" class="nav-item" data-section="grocery" onclick="showSection('grocery', this)">
+                        <span>🛒</span> Grocery List
+                    </a>
+                </div>
+
+                <div class="nav-group">
+                    <div class="nav-label">Planning</div>
+                    <a href="#" class="nav-item" data-section="planner" onclick="showSection('planner', this)">
+                        <span>📆</span> Meal Planner
+                    </a>
+                    <a href="#" class="nav-item" data-section="nutrition" onclick="showSection('nutrition', this)">
+                        <span>🧬</span> Nutrition Analysis
+                    </a>
+                </div>
+
+                <div class="nav-group">
+                    <div class="nav-label">Services</div>
+                    <a href="#" class="nav-item" data-section="upload" onclick="showSection('upload', this)">
+                        <span>📤</span> Upload Recipe
+                    </a>
+                    <a href="#" class="nav-item" data-section="chatbot" onclick="showSection('chatbot', this)">
+                        <span>👨‍🍳</span> AI Chef Chat
+                    </a>
+                    <a href="#" class="nav-item" data-section="messages" onclick="showSection('messages', this)">
+                        <span>📬</span> Messages
+                    </a>
+                </div>
+            </nav>
+
+            <div style="margin-top:auto; padding: 24px; border-top: 1px solid var(--glass-border);">
+                <button onclick="logout()" class="btn btn-ghost btn-block"
+                    style="justify-content:flex-start; padding: 10px;">
+                    <span>🚪</span> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="topbar">
+                <div style="display:flex; align-items:center; gap:16px;">
+                    <button class="btn btn-ghost" onclick="toggleSidebar()"
+                        style="padding:8px; font-size:1.25rem;">☰</button>
+                    <h2 id="topbarTitle" style="font-size:1.5rem;">AI Suggested Recipes</h2>
+                </div>
+            </header>
+
+            <!-- Always-visible profile header -->
+            <section class="profile-header glass">
+                <div class="profile-header-main">
+                    <div id="sidebarAvatar" class="avatar avatar-xl">U</div>
+                    <div class="profile-header-text">
+                        <div id="sidebarUsername" class="profile-name">Chef User</div>
+                        <div id="sidebarRole" class="profile-role" style="font-size:0.8rem; color:var(--text3);">
+                            Distinguished Member
+                        </div>
+                        <div id="sidebarBio"
+                            style="font-size:0.78rem; color:var(--text3); margin-top:4px; display:none;"></div>
+                    </div>
+                </div>
+                <div class="profile-header-actions">
+                    <button class="btn btn-ghost btn-sm" onclick="openEditProfileModal()">✏️ Edit Profile</button>
+                    <button id="themeBtn" class="btn btn-secondary btn-sm" onclick="toggleTheme()">🌙 Dark</button>
+                    <button class="btn btn-ghost btn-sm" onclick="logout()">🚪 Logout</button>
+                </div>
+            </section>
+
+            <div class="section-container">
+                <!-- Stats Row -->
+                <div id="statsRow" class="stats-grid">
+                    <div class="stat-card glass">
+                        <div class="stat-card-inner">
+                            <div>
+                                <div class="stat-label">Recipes Added</div>
+                                <div id="statRecipes" class="stat-val text-gradient">0</div>
+                            </div>
+                            <div class="stat-icon stat-icon-recipes">🍽️</div>
+                        </div>
+                    </div>
+                    <div class="stat-card glass">
+                        <div class="stat-card-inner">
+                            <div>
+                                <div class="stat-label">Meals Planned</div>
+                                <div id="statPlans" class="stat-val text-gradient">0</div>
+                            </div>
+                            <div class="stat-icon stat-icon-plans">📅</div>
+                        </div>
+                    </div>
+                    <div class="stat-card glass">
+                        <div class="stat-card-inner">
+                            <div>
+                                <div class="stat-label">Grocery Items</div>
+                                <div id="statGrocery" class="stat-val text-gradient">0</div>
+                            </div>
+                            <div class="stat-icon stat-icon-grocery">🛒</div>
+                        </div>
+                    </div>
+                    <div class="stat-card glass">
+                        <div class="stat-card-inner">
+                            <div>
+                                <div class="stat-label">Total XP</div>
+                                <div id="statLikes" class="stat-val text-gradient">0</div>
+                            </div>
+                            <div class="stat-icon stat-icon-xp">⭐</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: AI Suggest -->
+                <section id="section-suggest" class="section active">
+                    <div class="glass section-shell">
+                        <h3 class="section-title">What's in your kitchen?</h3>
+                        <p class="section-subtitle">Enter ingredients you have, and our AI will craft the perfect
+                            recipes.</p>
+                        <div class="form-group" style="display:flex; gap:12px;">
+                            <input id="ingredientInput" type="text" class="form-input"
+                                placeholder="e.g. Chicken, Spinach..." style="flex:1;">
+                            <button onclick="addIngredient()" class="btn btn-primary">Add</button>
+                        </div>
+                        <div id="chipContainer" class="chip-row" style="margin-bottom:24px;">
+                        </div>
+                        <div style="display:flex; gap:12px;">
+                            <button id="suggestBtn" onclick="suggestRecipes()" class="btn btn-primary" style="flex:1;">✨
+                                Suggest Recipes</button>
+                            <button onclick="clearIngredients()" class="btn btn-secondary">Clear All</button>
+                        </div>
+                    </div>
+                    <div id="suggestResults" class="recipe-grid"></div>
+                </section>
+
+                <section id="section-scanner" class="section">
+                    <div class="glass section-shell section-shell-center">
+                        <div class="float-icon" style="font-size:4rem; margin-bottom:24px;">📸</div>
+                        <h3>AI Fridge Scanner</h3>
+                        <p
+                            style="color:var(--text2); margin-bottom:32px; max-width:500px; margin-left:auto; margin-right:auto;">
+                            Upload a photo of your fridge or pantry. Our AI identifies ingredients instantly.</p>
+                        <div id="scanDropZone" class="scan-dropzone"
+                            onclick="document.getElementById('scanFileInput').click()">
+                            <p>Drag & drop image or <span class="text-gradient" style="font-weight:700;">browse</span>
+                            </p>
+                            <input type="file" id="scanFileInput" hidden accept="image/*"
+                                onchange="handleScanFile(this)">
+                        </div>
+                        <div id="scanPreviewBox" class="scan-preview-box" style="display:none;">
+                            <img id="scanPreviewImg" class="scan-preview-img">
+                            <div style="display:flex; gap:12px; justify-content:center;">
+                                <button id="scanBtn" onclick="scanFridge()" class="btn btn-primary">🔍 Detect</button>
+                                <button onclick="resetScanner()" class="btn btn-secondary">Reset</button>
+                            </div>
+                        </div>
+                        <div id="detectedIngredients" class="detected-ingredients" style="display:none;">
+                            <h4 class="section-title" style="margin-bottom:16px;">Detected Ingredients</h4>
+                            <div id="detectedChips" class="chip-row">
+                            </div>
+                            <button onclick="suggestFromFridge()" class="btn btn-primary btn-block">✨ Suggest
+                                Recipes</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Snap-to-Recipe -->
+                <section id="section-snaprecipe" class="section">
+                    <div class="glass section-shell section-shell-center">
+                        <div class="float-icon" style="font-size:4rem; margin-bottom:24px;">🍽️</div>
+                        <h3>Snap-to-Recipe</h3>
+                        <p
+                            style="color:var(--text2); margin-bottom:32px; max-width:500px; margin-left:auto; margin-right:auto;">
+                            Upload a photo of any dish and our AI will reverse-engineer the full recipe — ingredients,
+                            steps, and nutrition.</p>
+                        <div id="snapDropZone" class="scan-dropzone"
+                            onclick="document.getElementById('snapFileInput').click()">
+                            <p>Drag & drop a food photo or <span class="text-gradient"
+                                    style="font-weight:700;">browse</span></p>
+                            <input type="file" id="snapFileInput" hidden accept="image/*"
+                                onchange="handleSnapFile(this)">
+                        </div>
+                        <div id="snapPreviewBox" class="scan-preview-box" style="display:none;">
+                            <img id="snapPreviewImg" class="scan-preview-img">
+                            <div style="display:flex; gap:12px; justify-content:center;">
+                                <button id="snapBtn" onclick="reverseEngineerImage()" class="btn btn-primary">🔮
+                                    Reverse-Engineer Recipe</button>
+                                <button onclick="resetSnap()" class="btn btn-secondary">Reset</button>
+                            </div>
+                        </div>
+                        <div id="snapResults" class="recipe-grid" style="margin-top:32px;"></div>
+                    </div>
+                </section>
+
+                <!-- Section: Trending -->
+                <section id="section-trending" class="section premium-section">
+                    <div class="trending-hero-banner glass">
+                        <div class="trending-ambient-glow"></div>
+                        <div class="trending-header-row">
+                            <div class="trending-title-block">
+                                <h3 class="section-title text-gradient" style="font-size:1.6rem;">🔥 Trending Recipes</h3>
+                                <p class="section-subtitle" style="font-size:.95rem;">Most-loved dishes from the community right now.</p>
+                            </div>
+                            <button type="button" class="btn btn-accent btn-lg premium-shadow" onclick="surpriseMe()">
+                                🎠 Surprise Me
+                            </button>
+                        </div>
+                        <div class="trending-controls trending-controls-premium">
+                            <div id="trendingCategories" class="tag-row trending-tags"></div>
+                            <div class="search-container premium-search">
+                                <input type="text" id="recipeSearch" class="form-input recipe-search"
+                                    placeholder="Search recipes, tags, ingredients…"
+                                    oninput="searchRecipes(this.value)" />
+                                <button id="voiceSearchBtn" class="search-mic-btn" onclick="toggleVoiceSearch()"
+                                    title="Search by voice">
+                                    🎤
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="trendingGrid" class="trending-grid-premium">
+                        <div class="empty-state glass">
+                            <div class="empty-icon float-icon">🍽️</div>
+                            <p>No trending recipes yet. Try generating recipes in AI Suggest or adjust your filters.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Pantry -->
+                <section id="section-pantry" class="section">
+                    <div class="glass section-shell">
+                        <div class="section-header-row">
+                            <h3 class="section-title">🥫 Smart Pantry</h3>
+                            <div id="wasteNotAlert" class="alert info" style="display:none;">
+                                <span id="wasteNotContent"></span>
+                                <button class="btn btn-primary btn-sm" onclick="getZeroWasteIdeas()">💡 Ideas</button>
+                            </div>
+                        </div>
+                        <div class="form-group pantry-form-row">
+                            <input id="pantryItemName" type="text" class="form-input" placeholder="Item name">
+                            <input id="pantryExpiry" type="date" class="form-input">
+                            <button class="btn btn-primary" onclick="addPantryItem()">Add</button>
+                        </div>
+                        <div id="pantryList" class="pantry-list"></div>
+                    </div>
+                </section>
+
+                <!-- Section: Grocery -->
+                <section id="section-grocery" class="section">
+                    <div class="two-column-grid premium-grocery-grid">
+                        <div class="glass section-shell">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                                <h3>🛒 Grocery List</h3>
+                                <div>
+                                    <button class="btn btn-accent btn-sm" onclick="mockGroceryOrder('Instacart')"
+                                        style="margin-right:8px;">🛒 1-Click Order</button>
+                                    <button id="generateGroceryBtn" class="btn btn-secondary btn-sm"
+                                        onclick="generateGroceryList()">⚡ Generate</button>
+                                </div>
+                            </div>
+                            <div class="form-group grocery-add-row">
+                                <input id="groceryAddInput" type="text" class="form-input" placeholder="Add item…">
+                                <input id="groceryItemPrice" type="number" step="0.01" class="form-input"
+                                    placeholder="$ 0.00">
+                                <button class="btn btn-primary" onclick="addGroceryItem()">+</button>
+                            </div>
+                            <div id="groceryListContainer" class="grocery-list"></div>
+                            <button class="btn btn-primary btn-block" style="margin-top:20px;"
+                                onclick="saveGroceryList()">💾 Save Changes</button>
+                        </div>
+                        <div class="glass section-shell budget-card premium-budget-card">
+                            <h4 style="margin-bottom:16px;">💰 Budget Tracker</h4>
+                            <div class="form-group">
+                                <label class="form-label">Monthly Limit</label>
+                                <input id="budgetLimit" type="number" class="form-input" value="200"
+                                    oninput="updateBudgetBar()">
+                            </div>
+                            <div style="margin-top:24px;">
+                                <div
+                                    style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.9rem;">
+                                    <span id="budgetSpent">$0.00 spent</span>
+                                    <span id="budgetRemaining">$200.00 left</span>
+                                </div>
+                                <div class="budget-track">
+                                    <div id="budgetBar" class="budget-bar-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Planner -->
+                <section id="section-planner" class="section premium-section">
+                    <div class="planner-premium-layout">
+                        <div class="glass planner-calendar-glass">
+                            <div class="cal-header premium-cal-header">
+                                <h3 id="calMonthTitle" class="section-title text-gradient" style="font-size:1.4rem;">Month Year</h3>
+                                <div class="cal-nav">
+                                    <button class="btn btn-secondary btn-sm premium-nav-btn" onclick="changeMonth(-1)">◀</button>
+                                    <button class="btn btn-secondary btn-sm premium-nav-btn" onclick="changeMonth(1)">▶</button>
+                                </div>
+                            </div>
+                            <div class="cal-days-header">
+                                <span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
+                            </div>
+                            <div id="calendarGrid" class="calendar-grid premium-calendar-grid"></div>
+                        </div>
+                        <div class="planner-sidebar premium-sidebar">
+                            <div class="glass section-shell upcoming-glass">
+                                <h4 class="section-title" style="margin-bottom:20px; font-size:1.2rem;">📅 Upcoming Meals</h4>
+                                <div id="upcomingMeals" class="upcoming-list premium-upcoming-list"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Nutrition -->
+                <section id="section-nutrition" class="section premium-section">
+                    <div class="nutrition-layout premium-nutrition-layout">
+                        <div class="glass section-shell nutrition-goals-glass">
+                            <div class="nutrition-goals-header">
+                                <div class="macro-ring-container" style="margin-bottom:24px; transform: scale(1.1);">
+                                    <!-- Animated placeholder ring for UI -->
+                                    <svg viewBox="0 0 100 100" class="macro-ring premium-ring-spin">
+                                        <circle cx="50" cy="50" r="40" class="macro-track"></circle>
+                                        <circle cx="50" cy="50" r="40" class="macro-fill premium-ring-gradient" stroke-dasharray="251" stroke-dashoffset="60"></circle>
+                                    </svg>
+                                    <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column;">
+                                        <span style="font-size:1.4rem; font-weight:800; line-height:1;" id="totalDailyCalsUI">0</span>
+                                        <span style="font-size:.65rem; color:var(--text3); text-transform:uppercase;">kcal today</span>
+                                    </div>
+                                </div>
+                                <h3 class="section-title" style="text-align:center; margin-bottom:20px;">Daily Targets</h3>
+                            </div>
+                            
+                            <div class="premium-goal-inputs">
+                                <div class="form-group premium-input-group">
+                                    <label class="form-label">🔥 Calories (kcal)</label>
+                                    <input id="goalCalories" type="number" class="form-input" value="2000" onchange="recalcNutrition()">
+                                </div>
+                                <div class="form-group premium-input-group">
+                                    <label class="form-label">🥩 Protein (g)</label>
+                                    <input id="goalProtein" type="number" class="form-input" value="150" onchange="recalcNutrition()">
+                                </div>
+                                <div class="form-group premium-input-group">
+                                    <label class="form-label">🍞 Carbs (g)</label>
+                                    <input id="goalCarbs" type="number" class="form-input" value="250" onchange="recalcNutrition()">
+                                </div>
+                                <div class="form-group premium-input-group">
+                                    <label class="form-label">🥑 Fat (g)</label>
+                                    <input id="goalFat" type="number" class="form-input" value="65" onchange="recalcNutrition()">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="nutrition-main premium-nutrition-main">
+                            <div class="glass section-shell premium-progress-glass">
+                                <h3 class="section-title" style="margin-bottom:20px;">Macronutrient Progress</h3>
+                                <div id="nutritionProgressBars" class="premium-progress-bars"></div>
+                            </div>
+                            <div class="glass section-shell premium-chart-glass">
+                                <h3 class="section-title" style="margin-bottom:20px;">Weekly Calorie Trend</h3>
+                                <div id="weeklyNutritionChart" class="premium-chart-container"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Discover (Social) -->
+                <section id="section-discover" class="section">
+                    <div class="glass section-shell" style="margin-bottom:24px;">
+                        <div class="section-header-row">
+                            <h3 class="section-title">🌟 Community Feed</h3>
+                            <p class="section-subtitle">Discover recipes shared by the community.</p>
+                        </div>
+                        <div id="socialFeed" class="recipe-grid"></div>
+                    </div>
+                </section>
+
+                <!-- Section: Chatbot (AI) -->
+                <section id="section-chatbot" class="section">
+                    <div class="glass chat-shell chat-shell-premium">
+                        <div class="chat-header chat-header-ai">
+                            <div class="chat-header-left">
+                                <div class="chat-avatar-wrap">
+                                    <div class="avatar chat-avatar-ai">🤖</div>
+                                    <span class="online-dot"></span>
+                                </div>
+                                <div class="chat-header-info">
+                                    <h4>Chef AI Assistant</h4>
+                                    <span class="chat-status">Powered by AI • Always online</span>
+                                </div>
+                            </div>
+                            <div class="chat-header-actions">
+                                <button class="btn btn-ghost btn-sm chat-action-btn" onclick="document.getElementById('aiChatContent').innerHTML=''" title="Clear chat">🗑️</button>
+                            </div>
+                        </div>
+                        <div id="aiChatContent" class="dm-messages chat-messages-premium">
+                            <div class="chat-welcome">
+                                <div class="chat-welcome-icon">👨‍🍳</div>
+                                <h3>Welcome to Chef AI!</h3>
+                                <p>Ask me anything about recipes, ingredients, substitutions, cooking techniques, or nutrition.</p>
+                                <div class="chat-quick-actions">
+                                    <button class="chat-quick-btn" onclick="document.getElementById('aiChatInput').value='What can I make with chicken and rice?';document.getElementById('aiChatForm').dispatchEvent(new Event('submit'))">🍗 Quick recipe idea</button>
+                                    <button class="chat-quick-btn" onclick="document.getElementById('aiChatInput').value='Substitute for butter in baking?';document.getElementById('aiChatForm').dispatchEvent(new Event('submit'))">🔄 Ingredient swap</button>
+                                    <button class="chat-quick-btn" onclick="document.getElementById('aiChatInput').value='Give me a healthy meal prep idea';document.getElementById('aiChatForm').dispatchEvent(new Event('submit'))">🥗 Healthy meals</button>
+                                </div>
+                            </div>
+                        </div>
+                        <form id="aiChatForm" onsubmit="sendAIChat(event)" class="chat-input-row chat-input-premium">
+                            <div class="chat-input-wrap">
+                                <input id="aiChatInput" type="text" class="form-input chat-input-field"
+                                    placeholder="Ask Chef AI anything..." autocomplete="off">
+                            </div>
+                            <button type="submit" class="btn btn-primary chat-send-btn">
+                                <span class="chat-send-icon">➤</span>
+                            </button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Section: Messages (Feedback) -->
+                <section id="section-messages" class="section">
+                    <div class="glass dm-layout dm-layout-premium">
+                        <div class="dm-sidebar">
+                            <div class="dm-sidebar-header">
+                                <h3>💬 Messages</h3>
+                                <span class="dm-badge-count" id="dmUnreadCount"></span>
+                            </div>
+                            <div id="dmList" style="flex:1; overflow-y:auto;"></div>
+                        </div>
+                        <div class="dm-main">
+                            <div class="dm-main-header dm-main-header-premium">
+                                <div class="chat-header-left">
+                                    <div class="chat-avatar-wrap">
+                                        <div id="dmActiveAvatar" class="avatar">🛡️</div>
+                                        <span class="online-dot online-dot-support"></span>
+                                    </div>
+                                    <div class="chat-header-info">
+                                        <h4 id="dmActiveUsername">Admin Support</h4>
+                                        <span class="chat-status">Support Team • Usually replies instantly</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="dmChatContent" class="dm-messages chat-messages-premium">
+                                <div class="chat-welcome chat-welcome-dm">
+                                    <div class="chat-welcome-icon">🛡️</div>
+                                    <h3>Admin Support</h3>
+                                    <p>Send a message to our support team. We'll get back to you as soon as possible.</p>
+                                </div>
+                            </div>
+                            <form onsubmit="sendMessage(event)" class="dm-input-row chat-input-premium">
+                                <div class="chat-input-wrap">
+                                    <input id="dmChatInput" type="text" class="form-input chat-input-field"
+                                        placeholder="Type your message..." autocomplete="off">
+                                </div>
+                                <button type="submit" class="btn btn-primary chat-send-btn">
+                                    <span class="chat-send-icon">➤</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="section-upload" class="section">
+                    <div class="glass section-shell" style="max-width:800px; margin:0 auto;">
+                        <h3 class="section-title" style="margin-bottom:6px;">⬆️ Publish Recipe</h3>
+                        <p class="section-subtitle" style="margin-bottom:24px;">Share your creation with the Kitchen AI
+                            community.</p>
+                        <div id="uploadAlert" class="alert" style="display:none; margin-bottom:16px;"></div>
+                        <form id="uploadRecipeForm" onsubmit="uploadRecipe(event)">
+                            <div class="form-group">
+                                <label class="form-label">Recipe Title *</label>
+                                <input id="recipeTitle" type="text" class="form-input"
+                                    placeholder="e.g. Creamy Garlic Pasta" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Description</label>
+                                <textarea id="recipeDescription" class="form-input" rows="2"
+                                    placeholder="Brief description of your recipe..."></textarea>
+                            </div>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:16px;">
+                                <div class="form-group">
+                                    <label class="form-label">Category *</label>
+                                    <select id="recipeCategory" class="form-input">
+                                        <option>Breakfast</option>
+                                        <option>Lunch</option>
+                                        <option selected>Dinner</option>
+                                        <option>Snack</option>
+                                        <option>Dessert</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Cook Time *</label>
+                                    <input id="recipeCookTime" type="text" class="form-input"
+                                        placeholder="e.g. 30 mins">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Servings</label>
+                                    <input id="recipeServings" type="number" class="form-input" placeholder="2" min="1"
+                                        max="50" value="2">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Ingredients * (one per line)</label>
+                                <textarea id="recipeIngredients" class="form-input" rows="5"
+                                    placeholder="2 cups flour&#10;1 egg&#10;1 cup milk"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Steps * (one per line)</label>
+                                <textarea id="recipeSteps" class="form-input" rows="5"
+                                    placeholder="Mix dry ingredients&#10;Add wet ingredients&#10;Bake at 180°C for 25 mins"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Recipe Image (optional)</label>
+                                <div id="recipeImgZone" class="recipe-img-zone"
+                                    onclick="document.getElementById('recipeImgInput').click()">
+                                    <div style="font-size:2rem; margin-bottom:8px;">📷</div>
+                                    <p>Click to upload image or drag & drop</p>
+                                    <p style="font-size:0.78rem; margin-top:4px;">JPG, PNG or WebP, max 10MB</p>
+                                    <input type="file" id="recipeImgInput" hidden accept="image/*"
+                                        onchange="previewRecipeImage(this)">
+                                </div>
+                                <img id="recipeImgPreview" class="recipe-img-preview" alt="Preview">
+                            </div>
+                            <button id="uploadRecipeBtn" type="submit" class="btn btn-primary btn-block">📤 Publish
+                                Recipe</button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="recipeModal" class="modal-overlay" style="display:none" onclick="if(event.target===this) closeRecipeModal()">
+        <div class="modal-content glass">
+            <button onclick="closeRecipeModal()"
+                style="position:absolute; top:24px; right:24px; font-size:1.5rem;">✕</button>
+            <h2 id="modalRecipeTitle" style="margin-bottom:24px;"></h2>
+            <div id="modalRecipeBody"></div>
+        </div>
+    </div>
+
+    <div id="editProfileModal" class="modal-overlay" style="display:none" onclick="if(event.target===this) closeEditProfileModal()">
+        <div class="modal-content glass edit-profile-modal" style="max-width: 700px;">
+            <button onclick="closeEditProfileModal()" class="modal-close-btn">✕</button>
+            <h3 class="section-title">Edit Profile</h3>
+
+            <div class="modal-tabs">
+                <button class="modal-tab active" onclick="switchEditTab('profile')">👤 Profile</button>
+                <button class="modal-tab" onclick="switchEditTab('security')">🔒 Security</button>
+            </div>
+
+            <!-- Profile Tab -->
+            <div id="tab-profile" class="modal-tab-content active">
+                <div class="edit-profile-grid">
+                    <div class="edit-profile-left">
+                        <div class="profile-avatar-preview-wrap">
+                            <div id="profileAvatarPreview" class="avatar avatar-lg">U</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Quick avatars</label>
+                            <div class="avatar-presets-grid">
+                                <button type="button" class="avatar-preset-btn"
+                                    onclick="setPresetAvatar('https://images.unsplash.com/photo-1577214190018-40a603f59316?w=200&h=200&fit=crop')"><img
+                                        src="https://images.unsplash.com/photo-1577214190018-40a603f59316?w=200&h=200&fit=crop"
+                                        alt="Chef"></button>
+                                <button type="button" class="avatar-preset-btn"
+                                    onclick="setPresetAvatar('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&h=200&fit=crop')"><img
+                                        src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&h=200&fit=crop"
+                                        alt="Salad"></button>
+                                <button type="button" class="avatar-preset-btn"
+                                    onclick="setPresetAvatar('https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop')"><img
+                                        src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop"
+                                        alt="Pizza"></button>
+                                <button type="button" class="avatar-preset-btn"
+                                    onclick="setPresetAvatar('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&h=200&fit=crop')"><img
+                                        src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&h=200&fit=crop"
+                                        alt="Burger"></button>
+                                <button type="button" class="avatar-preset-btn"
+                                    onclick="setPresetAvatar('https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=200&h=200&fit=crop')"><img
+                                        src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=200&h=200&fit=crop"
+                                        alt="Sushi"></button>
+                                <button type="button" class="avatar-preset-btn"
+                                    onclick="setPresetAvatar('https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop')"><img
+                                        src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&h=200&fit=crop"
+                                        alt="Coffee"></button>
+                                <button type="button" class="avatar-preset-btn"
+                                    onclick="setPresetAvatar('https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=200&h=200&fit=crop')"><img
+                                        src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=200&h=200&fit=crop"
+                                        alt="Ramen"></button>
+                                <button type="button" class="avatar-preset-btn"
+                                    onclick="setPresetAvatar('https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=200&h=200&fit=crop')"><img
+                                        src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=200&h=200&fit=crop"
+                                        alt="Dessert"></button>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top:20px;">
+                            <label class="form-label">Custom Photo</label>
+                            <div class="custom-avatar-upload">
+                                <button type="button" class="btn btn-secondary btn-sm btn-block"
+                                    onclick="document.getElementById('customAvatarInput').click()">
+                                    📸 Choose Photo
+                                </button>
+                                <input type="file" id="customAvatarInput" hidden accept="image/*"
+                                    onchange="handleCustomAvatar(this)">
+                            </div>
+                        </div>
+                        <div id="profileAlert" class="alert" style="display:none;"></div>
+                    </div>
+
+                    <div class="edit-profile-right">
+                        <div class="form-group">
+                            <label class="form-label">Username</label>
+                            <input id="editUsername" type="text" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Avatar URL</label>
+                            <input id="editAvatarUrl" type="text" class="form-input"
+                                oninput="updateAvatarPreview(this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Bio</label>
+                            <textarea id="editBio" class="form-input" rows="3"
+                                placeholder="Tell others about your cooking style..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Dietary preferences</label>
+                            <div id="prefTags" class="pref-tags">
+                                <button type="button" class="pref-tag">Vegetarian</button>
+                                <button type="button" class="pref-tag">Vegan</button>
+                                <button type="button" class="pref-tag">Gluten-free</button>
+                                <button type="button" class="pref-tag">High Protein</button>
+                                <button type="button" class="pref-tag">Low Carb</button>
+                            </div>
+                        </div>
+                        <button id="saveProfileBtn" onclick="saveProfile()" class="btn btn-primary btn-block">Save
+                            Profile</button>
+
+                        <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--glass-border);">
+                            <h4 style="margin-bottom: 8px;">✨ Exclusive Themes (Pro)</h4>
+                            <div class="theme-btn-grid">
+                                <button class="theme-preview-btn theme-aurora"
+                                    onclick="applyExclusiveTheme('aurora', this)">Aurora</button>
+                                <button class="theme-preview-btn theme-sunset"
+                                    onclick="applyExclusiveTheme('sunset', this)">Sunset</button>
+                                <button class="theme-preview-btn theme-midnight"
+                                    onclick="applyExclusiveTheme('midnight', this)">Midnight</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Tab -->
+            <div id="tab-security" class="modal-tab-content">
+                <div style="padding: 20px 0;">
+                    <div class="form-group">
+                        <label class="form-label">New Password</label>
+                        <input id="newPassword" type="password" class="form-input"
+                            placeholder="Min 8 chars, 1 uppercase, 1 number">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password</label>
+                        <input id="confirmPassword" type="password" class="form-input"
+                            placeholder="Repeat new password">
+                    </div>
+                    <button id="changePassBtn" onclick="changePassword()" class="btn btn-accent btn-block"
+                        style="margin-top:16px;">Update Password</button>
+                    <div id="securityAlert" class="alert" style="display:none; margin-top:16px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Culinary Concierge FAB -->
+    <button id="messyHandsFab" class="messy-hands-fab" onclick="toggleMessyHands()"
+        title="Concierge Mode — Voice Navigation">
+        🎙️
+    </button>
+    <div id="voiceOverlay" class="voice-overlay" style="display:none;">
+        <div class="voice-overlay-content">
+            <div class="voice-pulse"></div>
+            <p id="voiceTranscript" style="font-size:1.5rem; font-weight:700; color:white;">Listening...</p>
+            <p style="color:rgba(255,255,255,0.6); margin-top:8px;">Say: "next step", "read ingredients", "go to
+                planner"...</p>
+            <button onclick="toggleMessyHands()" class="btn btn-ghost" style="margin-top:24px; color:white;">✕
+                Close</button>
+        </div>
+    </div>
+
+    <div id="toastContainer"
+        style="position:fixed; bottom:24px; right:24px; display:flex; flex-direction:column; gap:12px; z-index:2000;">
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/pantry.js"></script>
+    <script src="js/grocery.js"></script>
+    <script src="js/planner.js"></script>
+    <script src="js/social.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/ai_chat.js"></script>
+    <script src="js/nutrition.js"></script>
+    <script src="js/chatbot.js"></script>
+    <script src="js/timer.js"></script>
+    <script src="js/voice.js"></script>
+</body>
+
+</html>

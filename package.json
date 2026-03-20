@@ -1,0 +1,41 @@
+{
+    "name": "ai-kitchen-assistant",
+    "version": "1.0.0",
+    "description": "An AI-powered kitchen assistant for recipe suggestions, smart fridge scanning, and meal planning.",
+    "main": "backend/server.js",
+    "scripts": {
+        "start": "node backend/server.js",
+        "dev": "nodemon backend/server.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "ai",
+        "kitchen",
+        "assistant",
+        "recipe",
+        "meal-planner",
+        "gemini",
+        "supabase"
+    ],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@google/generative-ai": "^0.21.0",
+        "@supabase/supabase-js": "^2.39.7",
+        "axios": "^1.13.5",
+        "bcryptjs": "^2.4.3",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.5",
+        "express": "^4.18.3",
+        "express-rate-limit": "^7.1.5",
+        "express-validator": "^7.0.1",
+        "helmet": "^7.1.0",
+        "jsonwebtoken": "^9.0.2",
+        "multer": "^1.4.5-lts.1",
+        "puppeteer": "^24.38.0",
+        "uuid": "^9.0.1"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.0"
+    }
+}

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Kitchen Assistant — Smart Cooking & Meal Planning</title>
+    <meta name="description"
+        content="Elevate your cooking with AI recipe suggestions, smart fridge scanning, and personalized meal plans.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="auth-page">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="container main-layout"
+        style="display:flex; align-items:center; gap:60px; z-index:1; padding: 40px 24px;">
+        <!-- Hero Section -->
+        <div class="hero-text" style="flex:1.2; min-width: 320px;">
+            <div class="badge badge-orange" style="margin-bottom: 24px; display:inline-block;">✨ Powered by AI</div>
+            <h1 class="hero-title" style="margin-bottom: 24px;">Your AI <span class="text-gradient">Kitchen</span>
+                Companion</h1>
+            <p style="font-size: 1.25rem; color: var(--text2); margin-bottom: 40px; max-width: 540px;">
+                Scan your fridge, discover recipes tailored to your pantry, and plan your weekly meals with ease.
+                Cooking has never been this smart.
+            </p>
+
+            <div style="display:flex; gap:20px;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div style="font-size:1.5rem;">🍳</div>
+                    <div>
+                        <div style="font-weight:700;">Smart Recipes</div>
+                        <div style="font-size:0.875rem; color:var(--text3);">AI-generated suggestions</div>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div style="font-size:1.5rem;">📷</div>
+                    <div>
+                        <div style="font-weight:700;">Fridge Scanner</div>
+                        <div style="font-size:0.875rem; color:var(--text3);">Identify ingredients instantly</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auth Card -->
+        <div class="auth-card glass">
+            <div class="brand" style="text-align:center; margin-bottom: 40px;">
+                <div style="font-size: 3rem; margin-bottom: 15px;">🍽️</div>
+                <h2 style="font-size: 2rem; margin-bottom: 8px;">Welcome Back</h2>
+                <p style="color: var(--text2); font-size: 0.95rem;">Join the future of home cooking</p>
+            </div>
+
+            <div id="authAlert" class="alert" style="display:none;"></div>
+
+            <div class="auth-tabs">
+                <button id="loginTab" class="auth-tab active" onclick="switchTab('login')">Login</button>
+                <button id="signupTab" class="auth-tab" onclick="switchTab('signup')">Sign Up</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form active">
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input id="loginEmail" type="email" class="form-input" placeholder="chef@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <div style="position:relative;">
+                        <input id="loginPassword" type="password" class="form-input" placeholder="••••••••" required>
+                        <button type="button" onclick="togglePassword('loginPassword', this)"
+                            style="position:absolute; right:15px; top:12px; font-size:1.2rem;">👁️</button>
+                    </div>
+                </div>
+                <button id="loginBtn" type="submit" class="btn btn-primary btn-block">
+                    <span class="btn-text">Sign In</span>
+                    <span class="btn-loader" style="display:none;">⏳</span>
+                </button>
+            </form>
+
+            <!-- Signup Form -->
+            <form id="signupForm" class="auth-form">
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input id="signupUsername" type="text" class="form-input" placeholder="topchef123" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input id="signupEmail" type="email" class="form-input" placeholder="chef@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <div style="position:relative;">
+                        <input id="signupPassword" type="password" class="form-input"
+                            placeholder="Min. 8 chars, 1 Upper, 1 Digit" required>
+                        <button type="button" onclick="togglePassword('signupPassword', this)"
+                            style="position:absolute; right:15px; top:12px; font-size:1.2rem;">👁️</button>
+                    </div>
+                </div>
+                <button id="signupBtn" type="submit" class="btn btn-primary btn-block">
+                    <span class="btn-text">Create Account</span>
+                    <span class="btn-loader" style="display:none;">⏳</span>
+                </button>
+            </form>
+
+            <div style="text-align:center; margin-top: 32px; font-size: 0.875rem; color: var(--text3);">
+                <p>Admin? <a href="admin.html" class="text-gradient" style="font-weight:600;">Log in here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden toast container for generic messages -->
+    <div id="toastContainer"
+        style="position:fixed; bottom:24px; right:24px; display:flex; flex-direction:column; gap:12px; z-index:2000;">
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+
+</html>
