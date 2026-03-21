@@ -57,6 +57,9 @@
         <div class="ambient-blob blob-2"></div>
         <div class="ambient-blob blob-3"></div>
 
+        <!-- Sidebar overlay (tap to close on mobile) -->
+        <div class="sidebar-overlay" id="adminSidebarOverlay" onclick="closeAdminSidebar()"></div>
+
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div style="padding: 0 28px; margin-bottom: 40px; display:flex; align-items:center; gap:12px;">
@@ -82,11 +85,11 @@
             <nav>
                 <div class="nav-group">
                     <div class="nav-label">Management</div>
-                    <button class="nav-item active" onclick="showAdminSection('analytics', this)">📊 Analytics</button>
-                    <button class="nav-item" onclick="showAdminSection('users', this)">👥 Users</button>
-                    <button class="nav-item" onclick="showAdminSection('recipes', this)">🍳 Recipes</button>
-                    <button class="nav-item" onclick="showAdminSection('logs', this)">📋 Audit Logs</button>
-                    <button class="nav-item" onclick="showAdminSection('feedback', this)">📬 Feedback Inbox</button>
+                    <button class="nav-item active" onclick="showAdminSection('analytics', this); if(window.innerWidth<1024) closeAdminSidebar()">📊 Analytics</button>
+                    <button class="nav-item" onclick="showAdminSection('users', this); if(window.innerWidth<1024) closeAdminSidebar()">👥 Users</button>
+                    <button class="nav-item" onclick="showAdminSection('recipes', this); if(window.innerWidth<1024) closeAdminSidebar()">🍳 Recipes</button>
+                    <button class="nav-item" onclick="showAdminSection('logs', this); if(window.innerWidth<1024) closeAdminSidebar()">📋 Audit Logs</button>
+                    <button class="nav-item" onclick="showAdminSection('feedback', this); if(window.innerWidth<1024) closeAdminSidebar()">📬 Feedback Inbox</button>
                 </div>
             </nav>
 
@@ -101,7 +104,7 @@
         <div class="main-content">
             <header class="topbar">
                 <div style="display:flex; align-items:center; gap:16px;">
-                    <button class="btn btn-ghost" onclick="document.getElementById('sidebar').classList.toggle('open')" style="padding:8px; font-size:1.25rem;">☰</button>
+                    <button class="btn btn-ghost" onclick="toggleAdminSidebar()" style="padding:8px; font-size:1.25rem; width:40px; height:40px; background:var(--bg3); border:1px solid var(--glass-border); border-radius:var(--r-md);">☰</button>
                     <h2 id="adminTopbarTitle" style="font-size:1.3rem;">📊 Analytics</h2>
                 </div>
             </header>
@@ -351,6 +354,24 @@
         </div>
     </div>
 
+    <script>
+        function openAdminSidebar() {
+            document.getElementById('sidebar').classList.add('open');
+            const ov = document.getElementById('adminSidebarOverlay');
+            if (ov) ov.classList.add('visible');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeAdminSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            const ov = document.getElementById('adminSidebarOverlay');
+            if (ov) ov.classList.remove('visible');
+            document.body.style.overflow = '';
+        }
+        function toggleAdminSidebar() {
+            document.getElementById('sidebar').classList.contains('open')
+                ? closeAdminSidebar() : openAdminSidebar();
+        }
+    </script>
     <script src="js/auth.js"></script>
     <script src="js/admin.js"></script>
 </body>
