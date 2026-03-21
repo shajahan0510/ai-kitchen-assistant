@@ -359,6 +359,138 @@
                     </div>
                 </section>
 
+                <!-- Section: Meal Planner -->
+                <section id="section-planner-new" class="section premium-section">
+                    <div class="glass section-shell" style="max-width: 1000px; margin: 0 auto;">
+                        <div class="section-header-row" style="margin-bottom: 24px;">
+                            <div>
+                                <h3 class="section-title text-gradient">📆 Weekly Meal Planner</h3>
+                                <p class="section-subtitle">Organize your cooking for the week ahead.</p>
+                            </div>
+                            <div style="display:flex; gap:12px;">
+                                <button class="btn btn-secondary premium-shadow" onclick="autoGeneratePlan()">🤖 Auto-Fill</button>
+                                <button class="btn btn-primary premium-shadow" onclick="clearMealPlan()">🗑️ Clear</button>
+                            </div>
+                        </div>
+
+                        <div class="planner-grid premium-planner-grid">
+                            <!-- Mon -->
+                            <div class="planner-day glass">
+                                <div class="planner-day-header">Monday</div>
+                                <div class="planner-slot" data-day="Mon" data-meal="Breakfast">
+                                    <span class="slot-label">Breakfast</span>
+                                    <div class="slot-content"></div>
+                                </div>
+                                <div class="planner-slot" data-day="Mon" data-meal="Lunch">
+                                    <span class="slot-label">Lunch</span>
+                                    <div class="slot-content"></div>
+                                </div>
+                                <div class="planner-slot" data-day="Mon" data-meal="Dinner">
+                                    <span class="slot-label">Dinner</span>
+                                    <div class="slot-content"></div>
+                                </div>
+                            </div>
+                            <!-- Tue -->
+                            <div class="planner-day glass">
+                                <div class="planner-day-header">Tuesday</div>
+                                <div class="planner-slot" data-day="Tue" data-meal="Breakfast">
+                                    <span class="slot-label">Breakfast</span>
+                                    <div class="slot-content"></div>
+                                </div>
+                                <div class="planner-slot" data-day="Tue" data-meal="Lunch">
+                                    <span class="slot-label">Lunch</span>
+                                    <div class="slot-content"></div>
+                                </div>
+                                <div class="planner-slot" data-day="Tue" data-meal="Dinner">
+                                    <span class="slot-label">Dinner</span>
+                                    <div class="slot-content"></div>
+                                </div>
+                            </div>
+                            <!-- Wed -->
+                            <div class="planner-day glass">
+                                <div class="planner-day-header">Wednesday</div>
+                                <div class="planner-slot" data-day="Wed" data-meal="Breakfast">
+                                    <span class="slot-label">Breakfast</span>
+                                    <div class="slot-content"></div>
+                                </div>
+                                <div class="planner-slot" data-day="Wed" data-meal="Lunch">
+                                    <span class="slot-label">Lunch</span>
+                                    <div class="slot-content"></div>
+                                </div>
+                                <div class="planner-slot" data-day="Wed" data-meal="Dinner">
+                                    <span class="slot-label">Dinner</span>
+                                    <div class="slot-content"></div>
+                                </div>
+                            </div>
+                            <!-- Thu -->
+                            <div class="planner-day glass">
+                                <div class="planner-day-header">Thursday</div>
+                                <div class="planner-slot" data-day="Thu" data-meal="Breakfast">
+                                    <span class="slot-label">Breakfast</span>
+                                    <div class="slot-content"></div>
+                                </div>
+                                <div class="planner-slot" data-day="Thu" data-meal="Lunch">
+                                    <span class="slot-label">Lunch</span>
+                                    <div class="slot-content"></div>
+                                </div>
+                                <div class="planner-slot" data-day="Thu" data-meal="Dinner">
+                                    <span class="slot-label">Dinner</span>
+                                    <div class="slot-content"></div>
+                                </div>
+                            </div>
+                            <!-- Fri -->
+                            <div class="planner-day glass">
+                                <div class="planner-day-header">Friday</div>
+                                <div class="planner-slot" data-day="Fri" data-meal="Breakfast">
+                                    <span class="slot-label">Breakfast</span>
+                                    <div class="slot-content"></div>
+                                </div>
+                                <div class="planner-slot" data-day="Fri" data-meal="Lunch">
+                                    <span class="slot-label">Lunch</span>
+                                    <div class="slot-content"></div>
+                                </div>
+                                <div class="planner-slot" data-day="Fri" data-meal="Dinner">
+                                    <span class="slot-label">Dinner</span>
+                                    <div class="slot-content"></div>
+                                </div>
+                            </div>
+                            <!-- Sat -->
+                            <div class="planner-day glass">
+                                <div class="planner-day-header">Saturday</div>
+                                <div class="planner-slot" data-day="Sat" data-meal="Breakfast">
+                                    <span class="slot-label">Breakfast</span>
+                                    <div class="slot-content"></div>
+                                </div>
+                                <div class="planner-slot" data-day="Sat" data-meal="Lunch">
+                                    <span class="slot-label">Lunch</span>
+                                    <div class="slot-content"></div>
+                                </div>
+                                <div class="planner-slot" data-day="Sat" data-meal="Dinner">
+                                    <span class="slot-label">Dinner</span>
+                                    <div class="slot-content"></div>
+                                </div>
+                            </div>
+                            <!-- Sun -->
+                            <div class="planner-day glass">
+                                <div class="planner-day-header">Sunday</div>
+                                <div class="planner-slot" data-day="Sun" data-meal="Breakfast">
+                                    <span class="slot-label">Breakfast</span>
+                                    <div class="slot-content"></div>
+                                </div>
+                                <div class="planner-slot" data-day="Sun" data-meal="Lunch">
+                                    <span class="slot-label">Lunch</span>
+                                    <div class="slot-content"></div>
+                                </div>
+                                <div class="planner-slot" data-day="Sun" data-meal="Dinner">
+                                    <span class="slot-label">Dinner</span>
+                                    <div class="slot-content"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
                 <!-- Section: Nutrition -->
                 <section id="section-nutrition" class="section premium-section">
                     <div class="nutrition-layout premium-nutrition-layout">

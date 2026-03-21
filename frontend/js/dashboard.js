@@ -1053,6 +1053,59 @@ function searchRecipes(query) {
     }
 }
 
+// ─── Meal Planner Logic ────────────────────────────────────────────────────
+async function autoGeneratePlan() {
+    try {
+        const slots = document.querySelectorAll('.planner-slot');
+        slots.forEach(s => s.innerHTML = '<div class="spinner" style="width:20px;height:20px;margin:auto;"></div>');
+
+        // Fetch random pool of recipes from backend
+        const res = await apiFetch('/api/recipes/recommended');
+        let recipes = await res.json();
+        if (!recipes || recipes.length === 0) {
+            recipes = await (await apiFetch('/api/recipes/trending')).json();
+        }
+
+        if(!recipes || recipes.length === 0) throw new Error('No recipes found to plan');
+
+        slots.forEach(slot => {
+            const r = recipes[Math.floor(Math.random() * recipes.length)];
+            const label = slot.getAttribute('data-meal');
+            slot.innerHTML = `
+                <span class="slot-label">${label}</span>
+                <span class="slot-content">${r.title}</span>
+                ${r.image_url ? `<img src="${r.image_url}" class="planner-slot-img" alt="Meal">` : ''}
+            `;
+            slot.classList.add('filled');
+            slot.onclick = () => showRecipeModal(r);
+        });
+        showToast('✨ Your weekly meal plan is ready!', 'success');
+    } catch (err) {
+        console.error('Planner error:', err);
+        showToast('Failed to auto-generate meal plan.', 'error');
+        clearMealPlan();
+    }
+}
+
+function clearMealPlan() {
+    const slots = document.querySelectorAll('.planner-slot');
+    slots.forEach(slot => {
+        const label = slot.getAttribute('data-meal');
+        slot.innerHTML = `
+            <span class="slot-label">${label}</span>
+            <span class="planner-empty-hint">➕ Add Meal</span>
+        `;
+        slot.classList.remove('filled');
+        slot.onclick = null; // Can implement manual add later
+    });
+    showToast('Weekly plan cleared.', 'info');
+}
+
+// Initial clear to set empty state hints
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(clearMealPlan, 500);
+});
+
 // ─── Phase 15: Pro Tier & Monetization ─────────────────────────────────────
 function checkProStatus() {
     const user = getUser();
