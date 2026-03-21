@@ -1158,9 +1158,9 @@ textarea.form-input { resize: vertical; min-height: 72px; }
 
 /* ── Desktop (>= 1024px) ── */
 @media (min-width: 1024px) {
-    :root { --sidebar-w: 260px; --topbar-h: 64px; }
-    .sidebar { transform: translateX(0); }
-    .main-content { margin-left: var(--sidebar-w); }
+    :root { --sidebar-w: 0px; --topbar-h: 64px; }
+    /* Sidebar remains toggle-only even on desktop */
+    .main-content { margin-left: 0; }
     .section-container { padding: 24px 32px; }
     .section-shell { padding: 28px 24px; }
     .topbar { padding: 0 32px; }
