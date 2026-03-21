@@ -973,6 +973,86 @@ async function smartScaleRecipe(newServings) {
     }
 }
 
+// ─── Voice Search & Filter (Trending) ──────────────────────────────────────
+let searchRecognition = null;
+let isVoiceSearching = false;
+
+function toggleVoiceSearch() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const btn = document.getElementById('voiceSearchBtn');
+    const input = document.getElementById('recipeSearch');
+
+    if (!SpeechRecognition) {
+        showToast('Voice Search is not supported in your browser.', 'error');
+        return;
+    }
+
+    if (isVoiceSearching) {
+        isVoiceSearching = false;
+        if (searchRecognition) searchRecognition.stop();
+        btn.classList.remove('active');
+        btn.style.color = '';
+        return;
+    }
+
+    isVoiceSearching = true;
+    btn.classList.add('active');
+    btn.style.color = 'var(--primary)';
+    input.placeholder = 'Listening...';
+
+    searchRecognition = new SpeechRecognition();
+    searchRecognition.continuous = false;
+    searchRecognition.interimResults = false;
+    searchRecognition.lang = 'en-US';
+
+    searchRecognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        input.value = transcript;
+        searchRecipes(transcript);
+        showToast(`🎙️ Searched for: "${transcript}"`, 'info');
+    };
+
+    searchRecognition.onerror = (e) => {
+        console.error('Voice search error:', e);
+        showToast('Could not hear you. Please try again.', 'error');
+    };
+
+    searchRecognition.onend = () => {
+        isVoiceSearching = false;
+        btn.classList.remove('active');
+        btn.style.color = '';
+        input.placeholder = 'Search recipes, tags, ingredients…';
+    };
+
+    searchRecognition.start();
+}
+
+function searchRecipes(query) {
+    if(!query) query = '';
+    query = query.toLowerCase().trim();
+    const grid = document.getElementById('trendingGrid');
+    if (!grid) return;
+    const cards = grid.querySelectorAll('.recipe-card');
+    let hasVisible = false;
+
+    cards.forEach(card => {
+        const title = card.querySelector('h4')?.textContent.toLowerCase() || '';
+        const tags = Array.from(card.querySelectorAll('.tag')).map(t => t.textContent.toLowerCase()).join(' ');
+        
+        if (title.includes(query) || tags.includes(query)) {
+            card.style.display = 'flex';
+            hasVisible = true;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    const empty = grid.querySelector('.empty-state');
+    if (empty) {
+        empty.style.display = hasVisible ? 'none' : 'flex';
+    }
+}
+
 // ─── Phase 15: Pro Tier & Monetization ─────────────────────────────────────
 function checkProStatus() {
     const user = getUser();
