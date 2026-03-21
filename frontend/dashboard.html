@@ -367,9 +367,10 @@
                                 <h3 class="section-title text-gradient">📆 Weekly Meal Planner</h3>
                                 <p class="section-subtitle">Organize your cooking for the week ahead.</p>
                             </div>
-                            <div style="display:flex; gap:12px;">
-                                <button class="btn btn-secondary premium-shadow" onclick="autoGeneratePlan()">🤖 Auto-Fill</button>
-                                <button class="btn btn-primary premium-shadow" onclick="clearMealPlan()">🗑️ Clear</button>
+                            <div style="display:flex; gap:12px; align-items:center;">
+                                <input type="text" id="plannerIngredientsInput" class="form-input" style="min-width: 250px;" placeholder="e.g. Chicken, rice, broccoli...">
+                                <button class="btn btn-secondary premium-shadow" onclick="autoGeneratePlan()">✨ Generate AI Plan</button>
+                                <button class="btn btn-primary premium-shadow" onclick="clearMealPlan()" title="Clear">🗑️</button>
                             </div>
                         </div>
 

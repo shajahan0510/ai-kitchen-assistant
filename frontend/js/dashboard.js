@@ -1055,34 +1055,51 @@ function searchRecipes(query) {
 
 // ─── Meal Planner Logic ────────────────────────────────────────────────────
 async function autoGeneratePlan() {
+    const input = document.getElementById('plannerIngredientsInput');
+    const ingredientsString = input ? input.value.trim() : '';
+    
+    if (!ingredientsString) {
+        showToast('Please enter some ingredients first (e.g. Chicken, rice, broccoli...)', 'error');
+        if (input) input.focus();
+        return;
+    }
+
     try {
         const slots = document.querySelectorAll('.planner-slot');
         slots.forEach(s => s.innerHTML = '<div class="spinner" style="width:20px;height:20px;margin:auto;"></div>');
 
-        // Fetch random pool of recipes from backend
-        const res = await apiFetch('/api/recipes/recommended');
-        let recipes = await res.json();
-        if (!recipes || recipes.length === 0) {
-            recipes = await (await apiFetch('/api/recipes/trending')).json();
-        }
-
-        if(!recipes || recipes.length === 0) throw new Error('No recipes found to plan');
-
-        slots.forEach(slot => {
-            const r = recipes[Math.floor(Math.random() * recipes.length)];
-            const label = slot.getAttribute('data-meal');
-            slot.innerHTML = `
-                <span class="slot-label">${label}</span>
-                <span class="slot-content">${r.title}</span>
-                ${r.image_url ? `<img src="${r.image_url}" class="planner-slot-img" alt="Meal">` : ''}
-            `;
-            slot.classList.add('filled');
-            slot.onclick = () => showRecipeModal(r);
+        const ingredients = ingredientsString.split(',').map(i => i.trim()).filter(i => i);
+        
+        // Fetch customized 7-day meal plan from AI backend
+        const res = await apiFetch('/api/ai/meal-plan', {
+            method: 'POST',
+            body: JSON.stringify({ ingredients })
         });
-        showToast('✨ Your weekly meal plan is ready!', 'success');
+        
+        const recipes = await res.json();
+        
+        if (!res.ok) throw new Error(recipes.error || 'Failed to generate plan');
+        if (!recipes || recipes.length < 21) throw new Error('AI could not generate a full 7-day plan. Please add more ingredients.');
+
+        // Populate the 21 slots sequentially (they are ordered Mon-Sun: Breakfast, Lunch, Dinner in HTML)
+        slots.forEach((slot, index) => {
+            if (index < recipes.length) {
+                const r = recipes[index];
+                const label = slot.getAttribute('data-meal');
+                slot.innerHTML = `
+                    <span class="slot-label">${label}</span>
+                    <span class="slot-content">${r.title}</span>
+                    <span style="font-size:0.75rem; color:var(--text3); margin-top:4px;">${r.cooking_time || ''}</span>
+                `;
+                slot.classList.add('filled');
+                slot.onclick = () => showRecipeModal(r);
+            }
+        });
+        
+        showToast('✨ Your AI ingredient-based meal plan is ready!', 'success');
     } catch (err) {
         console.error('Planner error:', err);
-        showToast('Failed to auto-generate meal plan.', 'error');
+        showToast(err.message || 'Failed to generate AI meal plan.', 'error');
         clearMealPlan();
     }
 }

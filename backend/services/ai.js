@@ -67,6 +67,47 @@ Ensure the output is ONLY the JSON array, no markdown, no explanation.`;
     }
 }
 
+// ─── 7-Day Meal Plan Generation (Groq) ─────────────────────────────────────────
+async function generateMealPlan(ingredients) {
+    const prompt = `You are a professional AI Nutritionist and Chef. I have these ingredients available: ${ingredients.join(', ')}. Assume I also have basic pantry staples (oil, salt, pepper, common spices).
+    
+I need a full 7-day meal plan. Return a JSON array of EXACTLY 21 recipe objects. The array MUST represent 7 days of 3 meals each (Breakfast, Lunch, Dinner in that exact sequence for Mon, Tue, Wed, Thu, Fri, Sat, Sun).
+
+Each of the 21 unique recipe objects must have this EXACT structure:
+{
+  "title": "Recipe Name",
+  "cuisine": "Global",
+  "description": "Short appetizing description",
+  "ingredients": ["amount + item", "amount + item"],
+  "steps": ["Step 1", "Step 2"],
+  "cooking_time": "15 mins",
+  "difficulty": "Easy",
+  "servings": 2,
+  "nutrition": {
+    "calories": 400,
+    "protein": "25g",
+    "carbs": "40g",
+    "fat": "15g"
+  },
+  "category": "Breakfast, Lunch, or Dinner",
+  "tags": ["Healthy", "Quick"]
+}
+Ensure the output is ONLY the JSON array (length 21), no markdown formatting, no explanations.`;
+
+    try {
+        const text = await groqChat([{ role: 'user', content: prompt }], { max_tokens: 8000 });
+        const content = parseAiJson(text);
+        const recipes = Array.isArray(content) ? content : (content.recipes || content.plan || []);
+        if (recipes.length !== 21) {
+            console.warn(`[AI Warning] Generated ${recipes.length} meals instead of 21.`);
+        }
+        return recipes;
+    } catch (err) {
+        console.error('Groq Meal Plan API Error:', err.response?.data || err.message);
+        throw new Error('AI was unable to generate the meal plan. Please try again.');
+    }
+}
+
 // ─── Fridge/Image Scanner (Imagga) ───────────────────────────────────────────
 async function scanFridgeImage(base64Image, mimeType) {
     try {
@@ -259,4 +300,4 @@ Return ONLY the JSON object, no markdown.`;
     }
 }
 
-module.exports = { suggestRecipes, scanFridgeImage, chatWithAssistant, suggestSubstitution, suggestWasteNot, reverseEngineerFromImage, smartScale };
+module.exports = { suggestRecipes, scanFridgeImage, chatWithAssistant, suggestSubstitution, suggestWasteNot, reverseEngineerFromImage, smartScale, generateMealPlan };

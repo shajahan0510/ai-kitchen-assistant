@@ -48,6 +48,25 @@ router.post('/suggest',
     }
 );
 
+// ─── POST /api/ai/meal-plan ───────────────────────────────────────────────────
+router.post('/meal-plan',
+    [body('ingredients').isArray({ min: 1 }).withMessage('Provide at least one ingredient')],
+    validate,
+    async (req, res) => {
+        try {
+            const { generateMealPlan } = require('../services/ai');
+            const plan = await generateMealPlan(req.body.ingredients);
+
+            // Save these to central recipes so the frontend can retrieve details correctly via ID if needed, 
+            // though the planner might just use the raw JSON. We'll return the raw JSON to be safe and fast.
+            res.json(plan);
+        } catch (err) {
+            console.error('AI meal plan error:', err);
+            res.status(500).json({ error: 'AI service error while planning meals. Please try again.' });
+        }
+    }
+);
+
 // ─── POST /api/ai/scan-fridge ─────────────────────────────────────────────────
 router.post('/scan-fridge',
     [
