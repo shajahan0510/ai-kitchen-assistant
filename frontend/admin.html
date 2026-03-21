@@ -210,57 +210,91 @@
                 </section>
 
                 <!-- ── Feedback Inbox ── -->
-                <section id="admin-feedback" class="admin-section" style="height: calc(100vh - 150px);">
-                    <div class="glass dm-container" style="height:100%; display:flex;">
-                        <div class="dm-sidebar"
-                            style="width:320px; border-right:1px solid var(--glass-border); display:flex; flex-direction:column; min-height:0;">
-                            <div
-                                style="padding:20px; border-bottom:1px solid var(--glass-border); display:flex; justify-content:space-between; align-items:center;">
-                                <h3 style="font-size:1.1rem;">Messages</h3>
-                                <button class="btn btn-ghost btn-sm" onclick="loadFeedbackInbox()">🔄</button>
+                <section id="admin-feedback" class="admin-section">
+                    <div class="feedback-shell">
+
+                        <!-- ── Conversation sidebar ── -->
+                        <div class="feedback-sidebar glass">
+                            <div class="feedback-sidebar-header">
+                                <div>
+                                    <h3 class="feedback-sidebar-title">📬 Inbox</h3>
+                                    <p class="feedback-sidebar-sub">All user messages</p>
+                                </div>
+                                <button class="feedback-refresh-btn" onclick="loadFeedbackInbox()" title="Refresh">🔄</button>
                             </div>
-                            <div id="dmList" style="flex:1; overflow-y:auto;">
-                                <div class="spinner"></div>
+
+                            <!-- Search -->
+                            <div class="feedback-search-wrap">
+                                <input type="text" class="form-input feedback-search-input"
+                                    placeholder="🔍 Search users…"
+                                    oninput="filterDmList(this.value)" id="dmSearchInput">
+                            </div>
+
+                            <!-- Conversation list -->
+                            <div id="dmList" class="feedback-dm-list">
+                                <div class="spinner" style="margin:40px auto;"></div>
                             </div>
                         </div>
-                        <div id="dmChatArea" style="flex:1; display:flex; flex-direction:column; min-height:0;">
-                            <div id="dmEmptyState"
-                                style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--text3);">
-                                <div style="font-size:4rem; margin-bottom:16px;">💬</div>
+
+                        <!-- ── Chat area ── -->
+                        <div id="dmChatArea" class="feedback-chat-area">
+
+                            <!-- Empty state -->
+                            <div id="dmEmptyState" class="feedback-empty">
+                                <div class="feedback-empty-icon">💬</div>
                                 <h3>Select a conversation</h3>
-                                <p>Pick a user from the list to reply to feedback</p>
+                                <p>Pick a user from the left to read and reply to their feedback</p>
                             </div>
 
-                            <div id="dmActiveChat" style="display:none; flex:1; flex-direction:column; min-height:0;">
-                                <div
-                                    style="padding:16px 24px; border-bottom:1px solid var(--glass-border); display:flex; align-items:center; gap:12px;">
-                                    <div id="dmActiveAvatar" class="avatar">?</div>
-                                    <h4 id="dmActiveUsername">User Name</h4>
-                                </div>
-                                <div id="dmChatContent"
-                                    style="flex:1; overflow-y:auto; padding:24px; display:flex; flex-direction:column; gap:16px;">
+                            <!-- Active chat (hidden until user selected) -->
+                            <div id="dmActiveChat" class="feedback-active-chat" style="display:none; flex-direction:column;">
+
+                                <!-- Chat header -->
+                                <div class="feedback-chat-header">
+                                    <div class="feedback-chat-user">
+                                        <div class="feedback-avatar-wrap">
+                                            <div id="dmActiveAvatar" class="avatar">?</div>
+                                            <span class="online-dot"></span>
+                                        </div>
+                                        <div>
+                                            <div id="dmActiveUsername" class="feedback-chat-name">User</div>
+                                            <div class="feedback-chat-status">Active now</div>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; gap:8px;">
+                                        <button class="btn btn-ghost btn-sm" title="Mark resolved" onclick="adminMarkResolved()">✅ Resolve</button>
+                                    </div>
                                 </div>
 
-                                <div style="padding:12px 24px; border-top: 1px solid var(--glass-border);">
-                                    <div style="display:flex; gap:8px; margin-bottom:12px; overflow-x:auto;">
-                                        <button class="btn btn-secondary btn-sm"
-                                            onclick="sendQuickReply('💖 Thank you for your feedback!')">💖
-                                            Thanks</button>
-                                        <button class="btn btn-secondary btn-sm"
-                                            onclick="sendQuickReply('👌 We are looking into this!')">👌 OK</button>
-                                        <button class="btn btn-secondary btn-sm"
-                                            onclick="sendQuickReply('✅ This has been resolved.')">✅ Fixed</button>
+                                <!-- Messages -->
+                                <div id="dmChatContent" class="feedback-messages-area"></div>
+
+                                <!-- Reply area -->
+                                <div class="feedback-reply-area">
+                                    <!-- Quick replies -->
+                                    <div class="feedback-quick-replies">
+                                        <button class="fq-btn" onclick="sendQuickReply('💖 Thank you for your feedback!')">💖 Thanks</button>
+                                        <button class="fq-btn" onclick="sendQuickReply('👌 We are looking into this!')">👌 On it</button>
+                                        <button class="fq-btn" onclick="sendQuickReply('✅ This has been resolved.')">✅ Fixed</button>
+                                        <button class="fq-btn" onclick="sendQuickReply('🙏 We appreciate your patience!')">🙏 Patient</button>
                                     </div>
-                                    <div style="display:flex; gap:12px; align-items:center;">
-                                        <textarea id="dmChatInput" class="form-input" placeholder="Type your reply..."
-                                            rows="1" style="flex:1; max-height:100px;"></textarea>
-                                        <button class="btn btn-primary" onclick="adminSendMessage()">Send</button>
+                                    <!-- Input row -->
+                                    <div class="feedback-input-row">
+                                        <textarea id="dmChatInput" class="form-input feedback-textarea"
+                                            placeholder="Type your reply as admin…" rows="1"
+                                            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();adminSendMessage();}"></textarea>
+                                        <button class="feedback-send-btn" onclick="adminSendMessage()">
+                                            <span>Send</span>
+                                            <span>➤</span>
+                                        </button>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
                 </section>
+
             </div>
         </div>
     </div>
