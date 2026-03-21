@@ -1276,8 +1276,24 @@ textarea.form-input { resize: vertical; min-height: 72px; }
 .planner-empty-hint {
     color: var(--text3);
     font-size: 0.9rem;
-    display: flex;
     align-items: center;
     gap: 8px;
     margin-top: 6px;
+}
+.planner-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.planner-controls input {
+    flex: 1;
+    min-width: 200px;
+}
+@media (max-width: 640px) {
+    .planner-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
 }
