@@ -4,118 +4,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Kitchen Assistant — Smart Cooking & Meal Planning</title>
+    <title>AI Kitchen Assistant — Smart Cooking &amp; Meal Planning</title>
     <meta name="description"
         content="Elevate your cooking with AI recipe suggestions, smart fridge scanning, and personalized meal plans.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* ── Login Page Layout ───────────────────────────── */
+        .login-page {
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 16px;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg0);
+        }
+
+        /* Ambient blobs */
+        .login-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(70px);
+            pointer-events: none;
+            opacity: .6;
+        }
+        .login-blob-1 {
+            width: 340px; height: 340px;
+            background: radial-gradient(circle, rgba(37,99,235,.18), transparent 70%);
+            top: -80px; left: -60px;
+            animation: ambientFloat 9s ease-in-out infinite;
+        }
+        .login-blob-2 {
+            width: 280px; height: 280px;
+            background: radial-gradient(circle, rgba(6,182,212,.12), transparent 70%);
+            bottom: -60px; right: -40px;
+            animation: ambientFloat 12s ease-in-out infinite reverse;
+        }
+
+        /* Two-column wrapper */
+        .login-wrapper {
+            display: flex;
+            width: 100%;
+            max-width: 960px;
+            gap: 48px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Hero section — hidden on mobile, shown on md+ */
+        .login-hero {
+            display: none;
+            flex: 1;
+        }
+        .login-hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: var(--r-pill);
+            background: rgba(37,99,235,.12);
+            border: 1px solid rgba(37,99,235,.2);
+            color: var(--primary-light);
+            font-size: .8rem;
+            font-weight: 700;
+            letter-spacing: .04em;
+            margin-bottom: 28px;
+        }
+        .login-hero h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: -.03em;
+        }
+        .login-hero-desc {
+            color: var(--text2);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 40px;
+            max-width: 440px;
+        }
+        .login-features {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .login-feature {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .login-feature-icon {
+            width: 44px; height: 44px;
+            border-radius: var(--r-md);
+            background: var(--bg3);
+            border: 1px solid var(--glass-border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; flex-shrink: 0;
+        }
+        .login-feature-title { font-weight: 700; font-size: .9rem; margin-bottom: 2px; }
+        .login-feature-sub { font-size: .78rem; color: var(--text3); }
+
+        /* Auth card */
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            flex-shrink: 0;
+        }
+        .login-card-inner {
+            padding: 32px 24px;
+            border-radius: var(--r-2xl);
+            background: var(--bg2);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-xl);
+        }
+        .login-brand {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .login-brand-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .login-brand h2 {
+            font-size: 1.7rem;
+            margin-bottom: 6px;
+        }
+        .login-brand p {
+            color: var(--text2);
+            font-size: .9rem;
+        }
+
+        /* Tablet / desktop — show hero, constrain card */
+        @media (min-width: 768px) {
+            .login-hero { display: block; }
+            .login-card { max-width: 380px; }
+            .login-card-inner { padding: 40px 32px; }
+        }
+    </style>
 </head>
 
-<body class="auth-page">
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
+<body class="login-page">
+    <!-- Ambient blobs -->
+    <div class="login-blob login-blob-1"></div>
+    <div class="login-blob login-blob-2"></div>
 
-    <div class="container main-layout"
-        style="display:flex; align-items:center; gap:60px; z-index:1; padding: 40px 24px;">
-        <!-- Hero Section -->
-        <div class="hero-text" style="flex:1.2; min-width: 320px;">
-            <div class="badge badge-orange" style="margin-bottom: 24px; display:inline-block;">✨ Powered by AI</div>
-            <h1 class="hero-title" style="margin-bottom: 24px;">Your AI <span class="text-gradient">Kitchen</span>
-                Companion</h1>
-            <p style="font-size: 1.25rem; color: var(--text2); margin-bottom: 40px; max-width: 540px;">
-                Scan your fridge, discover recipes tailored to your pantry, and plan your weekly meals with ease.
-                Cooking has never been this smart.
+    <div class="login-wrapper">
+
+        <!-- Hero (desktop only) -->
+        <div class="login-hero">
+            <div class="login-hero-badge">✨ Powered by AI</div>
+            <h1>Your AI <span class="text-gradient">Kitchen</span> Companion</h1>
+            <p class="login-hero-desc">
+                Scan your fridge, discover recipes tailored to your pantry, and plan your weekly
+                meals with ease. Cooking has never been this smart.
             </p>
-
-            <div style="display:flex; gap:20px;">
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <div style="font-size:1.5rem;">🍳</div>
+            <div class="login-features">
+                <div class="login-feature">
+                    <div class="login-feature-icon">🍳</div>
                     <div>
-                        <div style="font-weight:700;">Smart Recipes</div>
-                        <div style="font-size:0.875rem; color:var(--text3);">AI-generated suggestions</div>
+                        <div class="login-feature-title">Smart Recipes</div>
+                        <div class="login-feature-sub">AI-generated suggestions based on your pantry</div>
                     </div>
                 </div>
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <div style="font-size:1.5rem;">📷</div>
+                <div class="login-feature">
+                    <div class="login-feature-icon">📷</div>
                     <div>
-                        <div style="font-weight:700;">Fridge Scanner</div>
-                        <div style="font-size:0.875rem; color:var(--text3);">Identify ingredients instantly</div>
+                        <div class="login-feature-title">Fridge Scanner</div>
+                        <div class="login-feature-sub">Snap a photo to identify ingredients instantly</div>
+                    </div>
+                </div>
+                <div class="login-feature">
+                    <div class="login-feature-icon">📅</div>
+                    <div>
+                        <div class="login-feature-title">Meal Planner</div>
+                        <div class="login-feature-sub">Organize your week with a smart calendar</div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Auth Card -->
-        <div class="auth-card glass">
-            <div class="brand" style="text-align:center; margin-bottom: 40px;">
-                <div style="font-size: 3rem; margin-bottom: 15px;">🍽️</div>
-                <h2 style="font-size: 2rem; margin-bottom: 8px;">Welcome Back</h2>
-                <p style="color: var(--text2); font-size: 0.95rem;">Join the future of home cooking</p>
-            </div>
-
-            <div id="authAlert" class="alert" style="display:none;"></div>
-
-            <div class="auth-tabs">
-                <button id="loginTab" class="auth-tab active" onclick="switchTab('login')">Login</button>
-                <button id="signupTab" class="auth-tab" onclick="switchTab('signup')">Sign Up</button>
-            </div>
-
-            <!-- Login Form -->
-            <form id="loginForm" class="auth-form active">
-                <div class="form-group">
-                    <label class="form-label">Email Address</label>
-                    <input id="loginEmail" type="email" class="form-input" placeholder="chef@example.com" required>
+        <div class="login-card">
+            <div class="login-card-inner">
+                <div class="login-brand">
+                    <span class="login-brand-icon">🍽️</span>
+                    <h2>Welcome Back</h2>
+                    <p>Join the future of home cooking</p>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <div style="position:relative;">
-                        <input id="loginPassword" type="password" class="form-input" placeholder="••••••••" required>
-                        <button type="button" onclick="togglePassword('loginPassword', this)"
-                            style="position:absolute; right:15px; top:12px; font-size:1.2rem;">👁️</button>
+
+                <div id="authAlert" class="alert" style="display:none;"></div>
+
+                <div class="auth-tabs">
+                    <button id="loginTab" class="auth-tab active" onclick="switchTab('login')">Login</button>
+                    <button id="signupTab" class="auth-tab" onclick="switchTab('signup')">Sign Up</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="loginForm" class="auth-form active">
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input id="loginEmail" type="email" class="form-input" placeholder="chef@example.com" required>
                     </div>
-                </div>
-                <button id="loginBtn" type="submit" class="btn btn-primary btn-block">
-                    <span class="btn-text">Sign In</span>
-                    <span class="btn-loader" style="display:none;">⏳</span>
-                </button>
-            </form>
-
-            <!-- Signup Form -->
-            <form id="signupForm" class="auth-form">
-                <div class="form-group">
-                    <label class="form-label">Username</label>
-                    <input id="signupUsername" type="text" class="form-input" placeholder="topchef123" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Email Address</label>
-                    <input id="signupEmail" type="email" class="form-input" placeholder="chef@example.com" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <div style="position:relative;">
-                        <input id="signupPassword" type="password" class="form-input"
-                            placeholder="Min. 8 chars, 1 Upper, 1 Digit" required>
-                        <button type="button" onclick="togglePassword('signupPassword', this)"
-                            style="position:absolute; right:15px; top:12px; font-size:1.2rem;">👁️</button>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <div style="position:relative;">
+                            <input id="loginPassword" type="password" class="form-input" placeholder="••••••••" required>
+                            <button type="button" onclick="togglePassword('loginPassword', this)"
+                                style="position:absolute; right:14px; top:50%; transform:translateY(-50%); font-size:1.1rem; background:none; border:none; cursor:pointer; color:var(--text2);">👁️</button>
+                        </div>
                     </div>
-                </div>
-                <button id="signupBtn" type="submit" class="btn btn-primary btn-block">
-                    <span class="btn-text">Create Account</span>
-                    <span class="btn-loader" style="display:none;">⏳</span>
-                </button>
-            </form>
+                    <button id="loginBtn" type="submit" class="btn btn-primary btn-block" style="margin-top:8px;">
+                        <span class="btn-text">Sign In</span>
+                        <span class="btn-loader" style="display:none;">⏳</span>
+                    </button>
+                </form>
 
-            <div style="text-align:center; margin-top: 32px; font-size: 0.875rem; color: var(--text3);">
-                <p>Admin? <a href="admin.html" class="text-gradient" style="font-weight:600;">Log in here</a></p>
+                <!-- Signup Form -->
+                <form id="signupForm" class="auth-form">
+                    <div class="form-group">
+                        <label class="form-label">Username</label>
+                        <input id="signupUsername" type="text" class="form-input" placeholder="topchef123" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input id="signupEmail" type="email" class="form-input" placeholder="chef@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <div style="position:relative;">
+                            <input id="signupPassword" type="password" class="form-input"
+                                placeholder="Min. 8 chars, 1 Upper, 1 Digit" required>
+                            <button type="button" onclick="togglePassword('signupPassword', this)"
+                                style="position:absolute; right:14px; top:50%; transform:translateY(-50%); font-size:1.1rem; background:none; border:none; cursor:pointer; color:var(--text2);">👁️</button>
+                        </div>
+                    </div>
+                    <button id="signupBtn" type="submit" class="btn btn-primary btn-block" style="margin-top:8px;">
+                        <span class="btn-text">Create Account</span>
+                        <span class="btn-loader" style="display:none;">⏳</span>
+                    </button>
+                </form>
+
+                <div style="text-align:center; margin-top:28px; font-size:.85rem; color:var(--text3);">
+                    <p>Admin? <a href="admin.html" class="text-gradient" style="font-weight:600;">Log in here</a></p>
+                </div>
             </div>
         </div>
+
     </div>
 
-    <!-- Hidden toast container for generic messages -->
+    <!-- Toast container -->
     <div id="toastContainer"
-        style="position:fixed; bottom:24px; right:24px; display:flex; flex-direction:column; gap:12px; z-index:2000;">
+        style="position:fixed; bottom:20px; right:16px; display:flex; flex-direction:column; gap:10px; z-index:2000; max-width: calc(100vw - 32px);">
     </div>
 
     <script src="js/auth.js"></script>
