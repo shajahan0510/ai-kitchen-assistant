@@ -82,9 +82,28 @@ function showSection(name, navEl) {
     if (name === 'discover') loadSocialFeed();
     if (name === 'pantry') loadPantryList();
     if (name === 'nutrition') loadNutritionDashboard();
+    // Auto-close sidebar on mobile after navigation
+    if (window.innerWidth < 1024) { closeSidebar(); }
 }
 
-function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+function openSidebar() {
+    document.getElementById('sidebar').classList.add('open');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (overlay) overlay.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (overlay) overlay.classList.remove('visible');
+    document.body.style.overflow = '';
+}
+
+function toggleSidebar() {
+    const isOpen = document.getElementById('sidebar').classList.contains('open');
+    isOpen ? closeSidebar() : openSidebar();
+}
 
 function toggleTheme() {
     const html = document.documentElement;
