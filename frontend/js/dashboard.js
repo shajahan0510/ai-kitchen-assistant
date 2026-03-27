@@ -257,7 +257,7 @@ function renderRecipeCards(containerId, recipes, isAI = false) {
         ${r.image_url ? `<img src="${r.image_url}" class="recipe-img" alt="${r.title}">` : `
         <div class="recipe-img" style="background:var(--bg3);position:relative;overflow:hidden;height:170px;">
             <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2rem;opacity:0.3;z-index:0;">${getCategoryEmoji(r.category)}</div>
-            <img src="https://image.pollinations.ai/prompt/${encodeURIComponent(r.title + ', gourmet plated food photography, high resolution, detailed dish, appetizing, soft lighting')}?width=400&height=300&nologo=true" 
+            <img src="https://loremflickr.com/400/300/meal,${encodeURIComponent(r.title.toLowerCase().replace(/style|dish|bowl|plate|recipe| and | with | type/g, '').trim().split(' ').slice(0, 3).join(','))}/all" 
                  style="width:100%;height:100%;object-fit:cover;position:relative;z-index:1;opacity:0;transition:opacity 0.8s ease;" 
                  onload="this.style.opacity=1" 
                  onerror="handleRecipeImageError(this, '${r.title.replace(/'/g, "\\'")}', '${r.category || ""}')" 
