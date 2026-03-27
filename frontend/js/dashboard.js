@@ -1,3 +1,4 @@
+console.log('!!! AI KITCHEN SYSTEM LOADED - VERSION: 5.0.3 (CACHE BUSTER V3) !!!');
 /* ═══════════════════════════════════════════════════════════════
    dashboard.js — Main dashboard: section nav, ingredients, AI,
    fridge scanner, trending, recipe modal, upload recipe
@@ -245,8 +246,8 @@ function renderRecipeCards(containerId, recipes, isAI = false) {
             <img src="https://image.pollinations.ai/prompt/${encodeURIComponent(r.title + ' delicious food photography, close-up, 4k')}?width=400&height=300&nologo=true&seed=${Math.floor(Math.random()*1000)}" 
                  style="width:100%;height:100%;object-fit:cover;position:relative;z-index:1;opacity:0;transition:opacity 0.6s ease;" 
                  onload="this.style.opacity=1" 
-                 onerror="this.style.display='none'" 
-                 alt="Generated image of ${r.title}">
+                 onerror="console.warn('Pollinations failed, trying fallback...', this.src); this.onerror=(e)=>{this.style.display='none';}; this.src='https://loremflickr.com/400/300/' + encodeURIComponent('${r.title.split(' ')[0]}') + ',food';" 
+                 alt="Image of ${r.title}">
         </div>`}
         <div class="recipe-content">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
