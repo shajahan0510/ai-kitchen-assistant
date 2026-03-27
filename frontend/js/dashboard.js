@@ -233,16 +233,8 @@ async function suggestRecipes() {
 
 // ─── Recipe Image Handlers ──────────────────────────────────────────────────
 window.handleRecipeImageError = function(img, title, category) {
-    console.warn(`[AI KITCHEN] Image failed for: ${title}. Trying fallbacks...`);
-    // First fallback: LoremFlickr (multi-keyword)
-    if (!img.dataset.triedFallback) {
-        img.dataset.triedFallback = 'true';
-        const keywords = title.toLowerCase().replace(/ and | with | style | type/g, ',').split(' ').slice(0, 3).join(',');
-        img.src = `https://loremflickr.com/400/300/food,${encodeURIComponent(keywords)}/all`;
-    } else {
-        // Final fallback: Hide image and let the emoji shine
-        img.style.display = 'none';
-    }
+    console.warn(`[AI KITCHEN] Bing thumbnail failed for: ${title}. Hiding image.`);
+    img.style.display = 'none';
 };
 
 // ─── Recipe Cards ─────────────────────────────────────────────────────────────
@@ -257,7 +249,7 @@ function renderRecipeCards(containerId, recipes, isAI = false) {
         ${r.image_url ? `<img src="${r.image_url}" class="recipe-img" alt="${r.title}">` : `
         <div class="recipe-img" style="background:var(--bg3);position:relative;overflow:hidden;height:170px;">
             <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2rem;opacity:0.3;z-index:0;">${getCategoryEmoji(r.category)}</div>
-            <img src="https://loremflickr.com/400/300/meal,${encodeURIComponent(r.title.toLowerCase().replace(/style|dish|bowl|plate|recipe| and | with | type/g, '').trim().split(' ').slice(0, 3).join(','))}/all" 
+            <img src="https://tse2.mm.bing.net/th?q=${encodeURIComponent(r.title + ' delicious food recipe')}&w=400&h=300&c=7&rs=1&p=0&dpr=3&pid=1.7&mkt=en-IN&adlt=moderate" 
                  style="width:100%;height:100%;object-fit:cover;position:relative;z-index:1;opacity:0;transition:opacity 0.8s ease;" 
                  onload="this.style.opacity=1" 
                  onerror="handleRecipeImageError(this, '${r.title.replace(/'/g, "\\'")}', '${r.category || ""}')" 
