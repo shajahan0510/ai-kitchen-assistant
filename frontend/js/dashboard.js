@@ -240,9 +240,13 @@ function renderRecipeCards(containerId, recipes, isAI = false) {
     container.innerHTML = recipes.map(r => `
       <div class="recipe-card glass" onclick="openRecipeModal('${encodeCardData(r, isAI)}')">
         ${r.image_url ? `<img src="${r.image_url}" class="recipe-img" alt="${r.title}">` : `
-        <div class="recipe-img" style="background:var(--bg3);position:relative;">
-            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2rem;opacity:0.4;">${getCategoryEmoji(r.category)}</div>
-            <img src="https://image.pollinations.ai/prompt/${encodeURIComponent(r.title + ' delicious food photography')}?width=400&height=300&nologo=true" style="width:100%;height:100%;object-fit:cover;position:relative;z-index:1;opacity:0;transition:opacity 0.5s;" onload="this.style.opacity=1" onerror="this.style.opacity=0" alt="Generated image of ${r.title}">
+        <div class="recipe-img" style="background:var(--bg3);position:relative;overflow:hidden;height:170px;">
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2rem;opacity:0.3;z-index:0;">${getCategoryEmoji(r.category)}</div>
+            <img src="https://image.pollinations.ai/prompt/${encodeURIComponent(r.title + ' delicious food photography, close-up, 4k')}?width=400&height=300&nologo=true&seed=${Math.floor(Math.random()*1000)}" 
+                 style="width:100%;height:100%;object-fit:cover;position:relative;z-index:1;opacity:0;transition:opacity 0.6s ease;" 
+                 onload="this.style.opacity=1" 
+                 onerror="this.style.display='none'" 
+                 alt="Generated image of ${r.title}">
         </div>`}
         <div class="recipe-content">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
