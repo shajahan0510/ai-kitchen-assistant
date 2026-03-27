@@ -526,3 +526,10 @@ ALTER TABLE public.recipes ADD COLUMN IF NOT EXISTS original_recipe_id UUID REFE
 -- difficulty on recipes (already in CHECK constraint but adding it explicitly)
 ALTER TABLE public.recipes ADD COLUMN IF NOT EXISTS difficulty TEXT CHECK (difficulty IN ('Easy', 'Medium', 'Hard'));
 
+-- Make sure newer recipe columns exist on legacy tables
+ALTER TABLE public.recipes ADD COLUMN IF NOT EXISTS tags JSONB DEFAULT '[]';
+ALTER TABLE public.recipes ADD COLUMN IF NOT EXISTS nutrition JSONB DEFAULT '{}';
+ALTER TABLE public.recipes ADD COLUMN IF NOT EXISTS servings INTEGER DEFAULT 2;
+ALTER TABLE public.recipes ADD COLUMN IF NOT EXISTS views INTEGER DEFAULT 0;
+ALTER TABLE public.recipes ADD COLUMN IF NOT EXISTS likes INTEGER DEFAULT 0;
+

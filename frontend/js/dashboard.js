@@ -653,7 +653,9 @@ async function uploadRecipe(e) {
         formData.append('servings', document.getElementById('recipeServings').value || '2');
         formData.append('ingredients', JSON.stringify(document.getElementById('recipeIngredients').value.trim().split('\n').filter(Boolean)));
         formData.append('steps', JSON.stringify(document.getElementById('recipeSteps').value.trim().split('\n').filter(Boolean)));
-        const imgFile = document.getElementById('recipeImgInput').files[0];
+        
+        const imgInput = document.getElementById('recipeImgInput');
+        const imgFile = imgInput ? imgInput.files[0] : null;
         if (imgFile) formData.append('image', imgFile);
 
         const res = await fetch('/api/recipes', { method: 'POST', headers: { Authorization: `Bearer ${getToken()}` }, body: formData });
