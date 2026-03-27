@@ -243,10 +243,10 @@ function renderRecipeCards(containerId, recipes, isAI = false) {
         ${r.image_url ? `<img src="${r.image_url}" class="recipe-img" alt="${r.title}">` : `
         <div class="recipe-img" style="background:var(--bg3);position:relative;overflow:hidden;height:170px;">
             <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2rem;opacity:0.3;z-index:0;">${getCategoryEmoji(r.category)}</div>
-            <img src="https://image.pollinations.ai/prompt/${encodeURIComponent(r.title + ' gourmet plated food photography, high resolution, detailed dish')}?width=400&height=300&nologo=true" 
+            <img src="https://image.pollinations.ai/prompt/${encodeURIComponent(r.title + ', gourmet plated food photography, high resolution, detailed dish, appetizing, soft lighting')}?width=400&height=300&nologo=true" 
                  style="width:100%;height:100%;object-fit:cover;position:relative;z-index:1;opacity:0;transition:opacity 0.8s ease;" 
                  onload="this.style.opacity=1" 
-                 onerror="console.warn('Pollinations failed, trying fallback...'); this.onerror=(e)=>{this.style.display='none';}; this.src='https://loremflickr.com/400/300/' + encodeURIComponent('${r.title.split(' ').slice(0, 3).join(',')}') + ',food';" 
+                 onerror="console.warn('Pollinations failed, trying fallback...'); this.onerror=(e)=>{this.style.display='none';}; this.src='https://loremflickr.com/400/300/food,' + encodeURIComponent('${r.title.toLowerCase().replace(/ and | with | style | type/g, ',')}') + '/all';" 
                  alt="Image of ${r.title}">
         </div>`}
         <div class="recipe-content">
