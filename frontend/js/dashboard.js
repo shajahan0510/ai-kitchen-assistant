@@ -231,6 +231,20 @@ async function suggestRecipes() {
     }
 }
 
+// ─── Recipe Image Handlers ──────────────────────────────────────────────────
+window.handleRecipeImageError = function(img, title, category) {
+    console.warn(`[AI KITCHEN] Image failed for: ${title}. Trying fallbacks...`);
+    // First fallback: LoremFlickr (multi-keyword)
+    if (!img.dataset.triedFallback) {
+        img.dataset.triedFallback = 'true';
+        const keywords = title.toLowerCase().replace(/ and | with | style | type/g, ',').split(' ').slice(0, 3).join(',');
+        img.src = `https://loremflickr.com/400/300/food,${encodeURIComponent(keywords)}/all`;
+    } else {
+        // Final fallback: Hide image and let the emoji shine
+        img.style.display = 'none';
+    }
+};
+
 // ─── Recipe Cards ─────────────────────────────────────────────────────────────
 function renderRecipeCards(containerId, recipes, isAI = false) {
     const container = document.getElementById(containerId);
@@ -246,7 +260,7 @@ function renderRecipeCards(containerId, recipes, isAI = false) {
             <img src="https://image.pollinations.ai/prompt/${encodeURIComponent(r.title + ', gourmet plated food photography, high resolution, detailed dish, appetizing, soft lighting')}?width=400&height=300&nologo=true" 
                  style="width:100%;height:100%;object-fit:cover;position:relative;z-index:1;opacity:0;transition:opacity 0.8s ease;" 
                  onload="this.style.opacity=1" 
-                 onerror="console.warn('Pollinations failed, trying fallback...'); this.onerror=(e)=>{this.style.display='none';}; this.src='https://loremflickr.com/400/300/food,' + encodeURIComponent('${r.title.toLowerCase().replace(/ and | with | style | type/g, ',')}') + '/all';" 
+                 onerror="handleRecipeImageError(this, '${r.title.replace(/'/g, "\\'")}', '${r.category || ""}')" 
                  alt="Image of ${r.title}">
         </div>`}
         <div class="recipe-content">
