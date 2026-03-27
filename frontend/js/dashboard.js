@@ -237,6 +237,105 @@ window.handleRecipeImageError = function(img, title, category) {
     img.style.display = 'none';
 };
 
+function hashString(str) {
+    let h = 2166136261;
+    for (let i = 0; i < str.length; i++) {
+        h ^= str.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+    }
+    return (h >>> 0);
+}
+
+function normalizeRecipeText(r) {
+    return `${r?.title || ''} ${r?.category || ''} ${r?.cuisine || ''}`.toLowerCase();
+}
+
+function pickStable(arr, seedStr) {
+    if (!arr?.length) return '';
+    const idx = hashString(seedStr || '') % arr.length;
+    return arr[idx];
+}
+
+function getAiRecipeImageUrl(r) {
+    // Use stable, keyword-based images for AI suggestions (avoid random/mismatched thumbnails).
+    const t = normalizeRecipeText(r);
+
+    const pools = {
+        breakfast: [
+            'https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1528207776546-365bb710ee93?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=1400&q=80',
+        ],
+        salad: [
+            'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1400&q=80',
+        ],
+        pasta: [
+            'https://images.unsplash.com/photo-1521389508051-d7ffb5dc8d8f?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1523986371872-9d3ba2e2f5f6?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1473093226795-af9932fe5856?auto=format&fit=crop&w=1400&q=80',
+        ],
+        soup: [
+            'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1604909052743-94e838986d24?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1616501268209-9d4e0c2de2ac?auto=format&fit=crop&w=1400&q=80',
+        ],
+        curry: [
+            'https://images.unsplash.com/photo-1604908176997-125f25cc500f?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=1400&q=80',
+        ],
+        rice: [
+            'https://images.unsplash.com/photo-1604908554162-5b7aee5d7ef3?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1604909053001-5d2b4d4f5b2e?auto=format&fit=crop&w=1400&q=80',
+        ],
+        chicken: [
+            'https://images.unsplash.com/photo-1604908177522-402c7ad5d2f1?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1604908177097-5d8c28c3f3e7?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=1400&q=80',
+        ],
+        seafood: [
+            'https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1553621042-4d24d0b92190?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1532634896-26909d0d4b31?auto=format&fit=crop&w=1400&q=80',
+        ],
+        dessert: [
+            'https://images.unsplash.com/photo-1486427944299-d1955d23e34d?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1511381939415-c1c1b45a6d1a?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=1400&q=80',
+        ],
+        generic: [
+            'https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=1400&q=80',
+        ],
+    };
+
+    const matchers = [
+        { keys: ['pancake', 'waffle', 'omelet', 'oat', 'smoothie', 'breakfast'], pool: 'breakfast' },
+        { keys: ['salad', 'bowl', 'greens'], pool: 'salad' },
+        { keys: ['pasta', 'spaghetti', 'noodle', 'mac', 'lasagna', 'alfredo'], pool: 'pasta' },
+        { keys: ['soup', 'stew', 'ramen', 'broth', 'chowder'], pool: 'soup' },
+        { keys: ['curry', 'masala', 'tikka', 'korma'], pool: 'curry' },
+        { keys: ['rice', 'risotto', 'biryani', 'fried rice'], pool: 'rice' },
+        { keys: ['chicken', 'turkey'], pool: 'chicken' },
+        { keys: ['fish', 'salmon', 'tuna', 'shrimp', 'prawn', 'seafood'], pool: 'seafood' },
+        { keys: ['cake', 'cookie', 'brownie', 'dessert', 'sweet', 'chocolate'], pool: 'dessert' },
+    ];
+
+    for (const m of matchers) {
+        if (m.keys.some(k => t.includes(k))) return pickStable(pools[m.pool], r.title || t);
+    }
+
+    if ((r.category || '').toLowerCase().includes('dessert')) return pickStable(pools.dessert, r.title || t);
+    if ((r.category || '').toLowerCase().includes('breakfast')) return pickStable(pools.breakfast, r.title || t);
+    if ((r.category || '').toLowerCase().includes('lunch')) return pickStable(pools.salad, r.title || t);
+    if ((r.category || '').toLowerCase().includes('dinner')) return pickStable(pools.generic, r.title || t);
+    return pickStable(pools.generic, r.title || t);
+}
+
 // ─── Recipe Cards ─────────────────────────────────────────────────────────────
 function renderRecipeCards(containerId, recipes, isAI = false) {
     const container = document.getElementById(containerId);
@@ -244,18 +343,18 @@ function renderRecipeCards(containerId, recipes, isAI = false) {
         container.innerHTML = '<div class="empty-state"><div class="empty-icon">🍽️</div><p>No recipes found.</p></div>';
         return;
     }
-    container.innerHTML = recipes.map(r => `
+    container.innerHTML = recipes.map(r => {
+        if (isAI) r.image_url = getAiRecipeImageUrl(r);
+        const imgUrl = r.image_url;
+        return `
       <div class="recipe-card glass" onclick="openRecipeModal('${encodeCardData(r, isAI)}')">
-        ${r.image_url ? `<img src="${r.image_url}" class="recipe-img" alt="${r.title}">` : `
-        <div class="recipe-img" style="background:var(--bg3);position:relative;overflow:hidden;height:170px;">
-            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2rem;opacity:0.3;z-index:0;">${getCategoryEmoji(r.category)}</div>
-            <img src="https://tse2.mm.bing.net/th?q=${encodeURIComponent(r.title + ' delicious food recipe')}&w=400&h=300&c=7&rs=1&p=0&dpr=3&pid=1.7&mkt=en-IN&adlt=moderate" 
-                 style="width:100%;height:100%;object-fit:cover;position:relative;z-index:1;opacity:0;transition:opacity 0.8s ease;" 
-                 onload="this.style.opacity=1" 
-                 onerror="handleRecipeImageError(this, '${r.title.replace(/'/g, "\\'")}', '${r.category || ""}')" 
-                 alt="Image of ${r.title}">
-        </div>`}
-        <div class="recipe-content">
+        <div class="recipe-img">
+          ${imgUrl
+                ? `<img src="${imgUrl}" alt="${r.title}" loading="lazy" onerror="this.style.display='none'; this.closest('.recipe-img').style.background='var(--bg3)';">`
+                : `<div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:2.25rem;opacity:0.35;">${getCategoryEmoji(r.category)}</div>`
+            }
+        </div>
+        <div class="recipe-body">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
             <h4 style="font-size:1.05rem;line-height:1.3;margin:0;">${r.title}</h4>
             ${r.difficulty ? `<span class="badge ${r.difficulty === 'Easy' ? 'badge-green' : r.difficulty === 'Medium' ? 'badge-orange' : 'badge-blue'}">${r.difficulty}</span>` : ''}
@@ -281,7 +380,8 @@ function renderRecipeCards(containerId, recipes, isAI = false) {
           </div>
         </div>
       </div>
-    `).join('');
+    `;
+    }).join('');
 }
 
 function encodeCardData(r, isAI) {
