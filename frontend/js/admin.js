@@ -196,18 +196,20 @@ async function adminAddRecipe(e) {
         const steps = document.getElementById('adminRecipeSteps').value.split('\n').filter(l => l.trim());
         const isFeatured = document.getElementById('adminRecipeFeatured').checked;
 
-        const res = await adminFetch('/api/recipes', {
+        // Use FormData because POST /api/recipes uses multer (multipart/form-data)
+        const formData = new FormData();
+        formData.append('title', document.getElementById('adminRecipeTitle').value.trim());
+        formData.append('category', document.getElementById('adminRecipeCategory').value);
+        formData.append('cuisine', document.getElementById('adminRecipeCuisine').value.trim() || 'Global');
+        formData.append('cooking_time', document.getElementById('adminRecipeTime').value.trim());
+        formData.append('description', document.getElementById('adminRecipeDesc').value.trim());
+        formData.append('ingredients', JSON.stringify(ingredients));
+        formData.append('steps', JSON.stringify(steps));
+
+        const res = await fetch(API + '/api/recipes', {
             method: 'POST',
-            body: JSON.stringify({
-                title: document.getElementById('adminRecipeTitle').value.trim(),
-                category: document.getElementById('adminRecipeCategory').value,
-                cuisine: document.getElementById('adminRecipeCuisine').value.trim() || 'Global',
-                cooking_time: document.getElementById('adminRecipeTime').value.trim(),
-                description: document.getElementById('adminRecipeDesc').value.trim(),
-                ingredients,
-                steps,
-                is_featured: isFeatured
-            }),
+            headers: { Authorization: `Bearer ${getAdminToken()}` },
+            body: formData
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || data.errors?.[0]?.msg || 'Publish failed');

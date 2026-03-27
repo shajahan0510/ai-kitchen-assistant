@@ -913,22 +913,24 @@ async function saveSnapRecipe() {
     const recipe = window._lastSnappedRecipe;
     if (!recipe) return;
     try {
-        const res = await apiFetch('/api/recipes', {
+        const formData = new FormData();
+        formData.append('title', recipe.title || '');
+        formData.append('description', recipe.description || '');
+        formData.append('category', recipe.category || 'Lunch');
+        formData.append('cooking_time', recipe.cooking_time || '30 mins');
+        formData.append('ingredients', JSON.stringify(Array.isArray(recipe.ingredients) ? recipe.ingredients : []));
+        formData.append('steps', JSON.stringify(Array.isArray(recipe.steps) ? recipe.steps : []));
+        if (recipe.nutrition) formData.append('nutrition', JSON.stringify(recipe.nutrition));
+        if (recipe.tags) formData.append('tags', JSON.stringify(recipe.tags));
+
+        const res = await fetch('/api/recipes', {
             method: 'POST',
-            body: JSON.stringify({
-                title: recipe.title,
-                description: recipe.description,
-                ingredients: recipe.ingredients,
-                steps: recipe.steps,
-                category: recipe.category || 'Lunch',
-                cooking_time: recipe.cooking_time,
-                nutrition: recipe.nutrition,
-                servings: recipe.servings || 2,
-                tags: recipe.tags || []
-            })
+            headers: { Authorization: `Bearer ${getToken()}` },
+            body: formData
         });
-        if (res.ok) showToast('Recipe saved! 🎉', 'success');
-        else throw new Error('Save failed');
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Save failed');
+        showToast('Recipe saved! 🎉', 'success');
     } catch (err) { showToast(err.message, 'error'); }
 }
 
