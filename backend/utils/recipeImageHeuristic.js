@@ -216,6 +216,16 @@ function getHeuristicRecipeImageUrl(r) {
         if (m.keys.some((k) => t.includes(k))) return pickStable(pools[m.pool], seed);
     }
 
+    const cuisine = (r?.cuisine || '').toLowerCase();
+    if (cuisine.includes('mexican') || cuisine.includes('tex-mex') || cuisine.includes('tex mex')) return pickStable(pools.mexican, seed);
+    if (cuisine.includes('italian')) return pickStable(pools.pasta, seed);
+    if (cuisine.includes('thai') || cuisine.includes('indian') || cuisine.includes('vietnamese') || cuisine.includes('malaysian')) return pickStable(pools.curry, seed);
+    if (cuisine.includes('japanese')) return pickStable(pools.ramen, seed);
+    if (cuisine.includes('korean') || cuisine.includes('chinese')) return pickStable(pools.stirfry, seed);
+    if (cuisine.includes('greek') || cuisine.includes('mediterranean') || cuisine.includes('lebanese') || cuisine.includes('middle eastern')) return pickStable(pools.salad, seed);
+    if (cuisine.includes('american') || cuisine.includes('bbq') || cuisine.includes('southern')) return pickStable(pools.burger, seed);
+    if (cuisine.includes('french')) return pickStable(pools.generic, seed);
+
     const cat = (r?.category || '').toLowerCase();
     if (cat.includes('dessert')) return pickStable(pools.dessert, seed);
     if (cat.includes('breakfast')) return pickStable(pools.breakfast, seed);

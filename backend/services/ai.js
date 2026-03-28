@@ -54,12 +54,12 @@ Return a JSON array of 4 distinct, creative recipe suggestions from different wo
   },
   "category": "Lunch",
   "tags": ["e.g. Vegan", "Low Carb", "Gluten-Free", "High Protein"],
-  "image_query": "2-6 word English search phrase for a food photo of this exact dish (e.g. thai green curry chicken bowl)"
+  "image_query": "5-10 English words: name the exact dish, main protein or starch, and cuisine for a stock photo search (examples: Vietnamese beef pho noodle soup bowl, wood fired margherita pizza close up, Korean beef bulgogi rice bowl, grilled salmon fillet with lemon herbs)"
 }
-Ensure image_query matches the dish name and main ingredients. Ensure the output is ONLY the JSON array, no markdown, no explanation.`;
+Rules for image_query: include the primary protein or main ingredient from the recipe; match the title; no brand names; no quotes inside the string. Ensure the output is ONLY the JSON array, no markdown, no explanation.`;
 
     try {
-        const text = await groqChat([{ role: 'user', content: prompt }]);
+        const text = await groqChat([{ role: 'user', content: prompt }], { temperature: 0.35, max_tokens: 4096 });
         const content = parseAiJson(text);
         return Array.isArray(content) ? content : (content.recipes || content.suggestions || []);
     } catch (err) {

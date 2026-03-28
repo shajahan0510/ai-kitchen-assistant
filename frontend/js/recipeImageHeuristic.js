@@ -219,6 +219,16 @@
             }
         }
 
+        const cuisine = ((r && r.cuisine) || '').toLowerCase();
+        if (cuisine.indexOf('mexican') !== -1 || cuisine.indexOf('tex-mex') !== -1 || cuisine.indexOf('tex mex') !== -1) return pickStable(pools.mexican, seed);
+        if (cuisine.indexOf('italian') !== -1) return pickStable(pools.pasta, seed);
+        if (cuisine.indexOf('thai') !== -1 || cuisine.indexOf('indian') !== -1 || cuisine.indexOf('vietnamese') !== -1 || cuisine.indexOf('malaysian') !== -1) return pickStable(pools.curry, seed);
+        if (cuisine.indexOf('japanese') !== -1) return pickStable(pools.ramen, seed);
+        if (cuisine.indexOf('korean') !== -1 || cuisine.indexOf('chinese') !== -1) return pickStable(pools.stirfry, seed);
+        if (cuisine.indexOf('greek') !== -1 || cuisine.indexOf('mediterranean') !== -1 || cuisine.indexOf('lebanese') !== -1 || cuisine.indexOf('middle eastern') !== -1) return pickStable(pools.salad, seed);
+        if (cuisine.indexOf('american') !== -1 || cuisine.indexOf('bbq') !== -1 || cuisine.indexOf('southern') !== -1) return pickStable(pools.burger, seed);
+        if (cuisine.indexOf('french') !== -1) return pickStable(pools.generic, seed);
+
         const cat = ((r && r.category) || '').toLowerCase();
         if (cat.indexOf('dessert') !== -1) return pickStable(pools.dessert, seed);
         if (cat.indexOf('breakfast') !== -1) return pickStable(pools.breakfast, seed);
