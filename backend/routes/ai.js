@@ -4,6 +4,8 @@ const { authenticate } = require('../middleware/auth');
 const { validate } = require('../middleware/validate');
 const { aiLimiter } = require('../middleware/rateLimiter');
 const { suggestRecipes, scanFridgeImage, chatWithAssistant } = require('../services/ai');
+const { resolveRecipeImageUrl } = require('../utils/recipeImageUrl');
+const { getHeuristicRecipeImageUrl } = require('../utils/recipeImageHeuristic');
 const supabase = require('../config/supabase');
 
 const router = express.Router();
@@ -37,7 +39,27 @@ router.post('/suggest',
                     is_ai_draft: true
                 }).select().single();
 
-                if (!error && data) savedRecipes.push(data);
+                if (!error && data) {
+                    let image_url = null;
+                    try {
+                        image_url = await resolveRecipeImageUrl({
+                            ...data,
+                            image_query: r.image_query,
+                            ingredients: r.ingredients,
+                            tags: r.tags,
+                            description: r.description,
+                        });
+                    } catch (e) {
+                        console.warn('[ai/suggest] resolveRecipeImageUrl:', e.message);
+                        image_url = getHeuristicRecipeImageUrl({ ...data, ...r });
+                    }
+                    const { error: upErr } = await supabase
+                        .from('recipes')
+                        .update({ image_url })
+                        .eq('id', data.id);
+                    if (upErr) console.warn('[ai/suggest] image_url update:', upErr.message);
+                    savedRecipes.push({ ...data, image_url });
+                }
             }
 
             res.json({ recipes: savedRecipes.length > 0 ? savedRecipes : suggestions });

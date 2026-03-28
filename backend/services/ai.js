@@ -53,9 +53,10 @@ Return a JSON array of 4 distinct, creative recipe suggestions from different wo
     "fat": "10g"
   },
   "category": "Lunch",
-  "tags": ["e.g. Vegan", "Low Carb", "Gluten-Free", "High Protein"]
+  "tags": ["e.g. Vegan", "Low Carb", "Gluten-Free", "High Protein"],
+  "image_query": "2-6 word English search phrase for a food photo of this exact dish (e.g. thai green curry chicken bowl)"
 }
-Ensure the output is ONLY the JSON array, no markdown, no explanation.`;
+Ensure image_query matches the dish name and main ingredients. Ensure the output is ONLY the JSON array, no markdown, no explanation.`;
 
     try {
         const text = await groqChat([{ role: 'user', content: prompt }]);
