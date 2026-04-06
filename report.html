@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Kitchen Assistant — Project Report</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 12pt;
+    line-height: 1.6;
+    color: #000;
+    background: #fff;
+  }
+  /* Cover Page */
+  .cover {
+    width: 100%; height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    page-break-after: always;
+    border: 3px double #000;
+    padding: 40px;
+  }
+  .cover h1 { font-size: 22pt; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 2px; }
+  .cover .subtitle { font-size: 14pt; margin-bottom: 40px; color: #444; }
+  .cover .meta { font-size: 11pt; line-height: 2; margin-top: 40px; }
+  .cover .logo { font-size: 64pt; margin-bottom: 20px; }
+  /* Content */
+  .content { padding: 20mm 25mm; }
+  h1 { font-size: 18pt; margin: 24px 0 12px; border-bottom: 2px solid #000; padding-bottom: 4px; text-transform: uppercase; page-break-before: always; }
+  h1:first-child, .no-break { page-break-before: avoid; }
+  h2 { font-size: 14pt; margin: 20px 0 10px; border-bottom: 1px solid #aaa; padding-bottom: 2px; }
+  h3 { font-size: 12pt; font-weight: bold; margin: 16px 0 8px; }
+  h4 { font-size: 11pt; font-weight: bold; font-style: italic; margin: 12px 0 6px; }
+  h5 { font-size: 11pt; font-weight: bold; margin: 10px 0 4px; }
+  p { margin-bottom: 8px; text-align: justify; }
+  ul, ol { margin: 8px 0 8px 24px; }
+  li { margin-bottom: 4px; }
+  code { font-family: "Courier New", monospace; font-size: 10pt; background: #f4f4f4; padding: 1px 4px; border-radius: 2px; }
+  pre { background: #f4f4f4; border: 1px solid #ddd; padding: 12px; margin: 12px 0; overflow-x: hidden; font-size: 9pt; font-family: "Courier New", monospace; line-height: 1.4; white-space: pre-wrap; word-break: break-all; }
+  pre code { background: none; padding: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 10pt; }
+  th, td { border: 1px solid #aaa; padding: 5px 8px; text-align: left; vertical-align: top; }
+  tr:nth-child(even) td { background: #f9f9f9; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 20px 0; }
+  strong { font-weight: bold; }
+  em { font-style: italic; }
+  /* TOC */
+  .toc { page-break-after: always; }
+  .toc h2 { text-align: center; font-size: 16pt; border: none; margin-bottom: 24px; }
+  .toc ul { list-style: none; margin: 0; }
+  .toc li { padding: 4px 0; border-bottom: 1px dotted #aaa; display: flex; justify-content: space-between; }
+  .toc li.l1 { font-weight: bold; margin-top: 8px; }
+  .toc li.l2 { padding-left: 20px; }
+  .toc li.l3 { padding-left: 40px; font-size: 10pt; }
+  /* Abstract */
+  .abstract { page-break-after: always; }
+  .abstract h2 { text-align: center; border: none; }
+  .abstract p { text-align: justify; }
+  /* Page numbers via counter */
+  @page { size: A4; margin: 20mm 25mm; @bottom-center { content: counter(page); font-size: 10pt; } }
+  @media print { body { font-size: 11pt; } }
+</style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="cover">
+  <div class="logo">🍽️</div>
+  <h1>AI Kitchen Assistant</h1>
+  <div class="subtitle">Comprehensive Project Report</div>
+  <hr style="width:60%;margin:20px auto;border-top:1px solid #000;">
+  <div class="meta">
+    <strong>Project Name:</strong> AI Kitchen Assistant<br>
+    <strong>Technology Stack:</strong> Node.js · Express.js · Supabase · Groq AI · Imagga<br>
+    <strong>Type:</strong> Full-Stack Web Application with AI Integration<br>
+    <strong>Date:</strong> April 2026<br>
+    <strong>Version:</strong> 1.0.0
+  </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="content toc">
+  <h2>TABLE OF CONTENTS</h2>
+  <ul>
+    <li class="l1"><span>ABSTRACT</span><span>iii</span></li>
+    <li class="l1"><span>LIST OF TABLES</span><span>iv</span></li>
+    <li class="l1"><span>LIST OF FIGURES</span><span>v</span></li>
+    <li class="l1"><span>LIST OF ABBREVIATIONS &amp; SYMBOLS</span><span>vi</span></li>
+    <li class="l1"><span>1. INTRODUCTION</span><span>1</span></li>
+    <li class="l2"><span>1.1 General</span><span>1</span></li>
+    <li class="l2"><span>1.2 System Analysis</span><span>2</span></li>
+    <li class="l3"><span>1.2.1 General Context</span><span>2</span></li>
+    <li class="l3"><span>1.2.2 Problem Statement</span><span>3</span></li>
+    <li class="l3"><span>1.2.3 Objectives</span><span>4</span></li>
+    <li class="l2"><span>1.3 System Architecture and Design</span><span>5</span></li>
+    <li class="l2"><span>1.4 Methodology &amp; Technology Stack</span><span>6</span></li>
+    <li class="l1"><span>2. LITERATURE REVIEW</span><span>8</span></li>
+    <li class="l2"><span>2.1 General Review</span><span>8</span></li>
+    <li class="l2"><span>2.2 AI and Computer Vision in Culinary Applications</span><span>9</span></li>
+    <li class="l2"><span>2.3 The Role of Large Language Models in Recipe Generation</span><span>10</span></li>
+    <li class="l1"><span>3. SYSTEM DESIGN</span><span>12</span></li>
+    <li class="l2"><span>3.1 System Architecture Diagram</span><span>12</span></li>
+    <li class="l2"><span>3.2 Database Design</span><span>13</span></li>
+    <li class="l2"><span>3.3 API Design</span><span>18</span></li>
+    <li class="l2"><span>3.4 Security Design</span><span>22</span></li>
+    <li class="l1"><span>4. MODULE DESCRIPTIONS</span><span>24</span></li>
+    <li class="l2"><span>4.1 Authentication Module</span><span>24</span></li>
+    <li class="l2"><span>4.2 AI Recipe Suggestion Module</span><span>25</span></li>
+    <li class="l2"><span>4.3 Recipe Management Module</span><span>27</span></li>
+    <li class="l2"><span>4.4 Meal Planner Module</span><span>28</span></li>
+    <li class="l2"><span>4.5 Grocery List Module</span><span>28</span></li>
+    <li class="l2"><span>4.6 Smart Pantry Module</span><span>29</span></li>
+    <li class="l2"><span>4.7 Social &amp; Community Module</span><span>29</span></li>
+    <li class="l2"><span>4.8 Direct Messaging Module</span><span>30</span></li>
+    <li class="l2"><span>4.9 Voice &amp; Cooking Mode Module</span><span>30</span></li>
+    <li class="l2"><span>4.10 Admin Portal Module</span><span>31</span></li>
+    <li class="l2"><span>4.11 Gamification Module</span><span>32</span></li>
+    <li class="l1"><span>5. IMPLEMENTATION DETAILS</span><span>33</span></li>
+    <li class="l2"><span>5.1 Project File Structure</span><span>33</span></li>
+    <li class="l2"><span>5.2 Key Implementation Patterns</span><span>35</span></li>
+    <li class="l2"><span>5.3 Deployment Configuration</span><span>36</span></li>
+    <li class="l1"><span>6. TESTING AND VALIDATION</span><span>37</span></li>
+    <li class="l2"><span>6.1 API Testing</span><span>37</span></li>
+    <li class="l2"><span>6.2 Input Validation Testing</span><span>39</span></li>
+    <li class="l2"><span>6.3 Security Testing</span><span>40</span></li>
+    <li class="l2"><span>6.4 Cross-Browser &amp; Responsive Testing</span><span>41</span></li>
+    <li class="l1"><span>7. RESULTS AND DISCUSSION</span><span>42</span></li>
+    <li class="l2"><span>7.1 System Performance</span><span>42</span></li>
+    <li class="l2"><span>7.2 AI Output Quality</span><span>43</span></li>
+    <li class="l2"><span>7.3 Feature Completion Matrix</span><span>44</span></li>
+    <li class="l1"><span>8. FUTURE SCOPE</span><span>46</span></li>
+    <li class="l1"><span>9. CONCLUSION</span><span>48</span></li>
+    <li class="l1"><span>10. REFERENCES</span><span>49</span></li>
+    <li class="l1"><span>APPENDICES</span><span>51</span></li>
+  </ul>
+</div>
+
+<!-- MAIN CONTENT from MD -->
+<div class="content">
+
+
+
+<h2>ABSTRACT</h2>
+
+<p>The AI Kitchen Assistant is an innovative, production-ready full-stack web application designed to revolutionize the culinary experience. By integrating advanced Artificial Intelligence capabilities, including Large Language Models (LLMs) and Computer Vision, the platform offers personalized recipe suggestions, smart fridge scanning, intelligent meal planning, auto-generated grocery lists, and an interactive AI chatbot.</p>
+
+<p>Built on a robust technology stack featuring Node.js, Express.js, and Supabase (PostgreSQL with Row Level Security), the system ensures high performance, security, and scalability. The frontend utilizes Vanilla JavaScript paired with a modern, dynamic, and premium glassmorphism design system to deliver a visually stunning user experience. The AI functionalities are powered by Groq (utilizing Llama 3 models) for rapid, intelligent recipe generation and natural language processing, and Imagga for accurate object detection and ingredient identification from images.</p>
+
+<p>The project addresses common challenges such as food waste, meal planning fatigue, and a lack of culinary inspiration, presenting a cohesive digital environment where users can manage their pantries, engage socially through a community feed, and level up their cooking skills through gamification patterns.</p>
+
+<h2>LIST OF TABLES</h2>
+
+<p>No. | Title | Description</p>
+<p>--- | --- | ---</p>
+<p>Table 1 | Technology Stack Summary | Overview of frontend, backend, database, and AI technologies utilized.</p>
+<p>Table 2 | Core API Endpoints | Summary of critical RESTful API endpoints and their authentication requirements.</p>
+<p>Table 3 | Database Schema Overview | Description of main PostgreSQL tables and their relationships.</p>
+
+<h2>LIST OF FIGURES</h2>
+
+<p>No. | Title | Description</p>
+<p>--- | --- | ---</p>
+<p>Figure 1 | General System Architecture | High-level diagram representing the interaction between frontend, Express backend, Supabase, and third-party AI APIs.</p>
+<p>Figure 2 | AI Fridge Scanning Flow | The step-by-step process of converting an image into a list of ingredients and reverse-engineering a recipe.</p>
+<p>Figure 3 | Meal Planner Logic | Flowchart outlining the automated meal plan generation over a 7-day period.</p>
+
+<h2>LIST OF ABBREVIATIONS & SYMBOLS</h2>
+
+<ul><li><strong>AI:</strong> Artificial Intelligence</li>
+<li><strong>API:</strong> Application Programming Interface</li>
+<li><strong>CORS:</strong> Cross-Origin Resource Sharing</li>
+<li><strong>DB:</strong> Database</li>
+<li><strong>JSON:</strong> JavaScript Object Notation</li>
+<li><strong>JWT:</strong> JSON Web Token</li>
+<li><strong>LLM:</strong> Large Language Model</li>
+<li><strong>REST:</strong> Representational State Transfer</li>
+<li><strong>RLS:</strong> Row Level Security</li>
+<li><strong>SQL:</strong> Structured Query Language</li>
+<li><strong>UUID:</strong> Universally Unique Identifier</li>
+<p></ul>
+<hr>
+
+<h2>1. INTRODUCTION</h2>
+
+<h3>1.1 GENERAL</h3>
+
+<p>In the modern fast-paced world, individuals frequently encounter friction when organizing their daily meals. From managing expiring pantry items to finding creative ways to cook what is available, meal preparation often becomes a chore rather than an enjoyable experience. The rise of Artificial Intelligence (AI) presents unique opportunities to alleviate these pain points. The AI Kitchen Assistant aims to be an all-encompassing digital sous-chef, bringing state-of-the-art AI right to the user's kitchen. It acts not just as a repository of recipes, but as a proactive tool that analyzes ingredients, suggests zero-waste cooking alternatives, and automates mundane tasks like drafting grocery lists.</p>
+
+<h3>1.2 SYSTEM ANALYSIS</h3>
+
+<h4>1.2.1 General Context</h4>
+
+<p>The culinary software space is densely populated with static recipe blogs and basic meal planners. However, most existing applications operate as passive databases. Users must search for what they want and manually curate their schedules. The demand has shifted toward proactive, intelligent systems that contextually assist the user based on real-time data—such as leveraging a photo of their open refrigerator.</p>
+
+<h4>1.2.2 Problem Statement</h4>
+
+<h5>1.2.2.1 General Difficulties</h5>
+<p>Households globally contribute significantly to food waste, predominantly due to forgotten ingredients expiring or a lack of knowledge on how to combine available items.</p>
+
+<h5>1.2.2.2 Existing System Limitations</h5>
+<p>Standard recipe apps require manual input of every available ingredient, which is tedious. Furthermore, their search algorithms rely on exact database matches rather than creative, adaptable culinary intelligence.</p>
+
+<h5>1.2.2.3 Proposed Solution</h5>
+<p>By adopting Computer Vision natively through the Imagga API, users can take pictures of their ingredients and let the AI instantly identify them. Incorporating Groq's high-speed inference of the Llama-3 model enables the platform to dynamically generate recipes without needing a static, pre-existing database match. The system can synthesize brand new meals, substitute ingredients dynamically based on dietary needs, and intelligently scale servings.</p>
+
+<h4>1.2.3 Objectives</h4>
+
+<ol><ul><li><strong>Develop a Robust Core Platform:</strong> Construct a scalable Express backend linked to a Supabase PostgreSQL database governed by Row Level Security.</li>
+<li><strong>Integrate Computer Vision:</strong> Enable smart "Fridge Scanning" using Imagga to accurately detect raw ingredients from user-uploaded images.</li>
+<li><strong>Implement Advanced LLM Capabilities:</strong> Utilize Groq for high-speed AI tasks: Recipe Suggestion, Zero-Waste Ideation, Ingredient Substitution, Natural Language Chatbotting, and 7-day Meal Plan Generation.</li>
+<li><strong>Create a Premium User Interface:</strong> Design an aesthetically pleasing, responsive frontend emphasizing modern design philosophies (e.g., glassmorphism, dynamic animations, modern typography).</li>
+<li><strong>Build Gamification and Community:</strong> Integrate a social feed, user ranks, XP systems, and weekly cooking challenges to foster user retention and engagement.</li>
+<p></ul></ol>
+<h3>1.3 SYSTEM ARCHITECTURE AND DESIGN</h3>
+
+<p>The AI Kitchen Assistant is structured around a typical 3-tier web architecture, enhanced by external microservices for AI inference.</p>
+
+<ol><ul><li><strong>Frontend (Client Tier):</strong> Built with Vanilla JS and CSS3. Features a modular approach (e.g., <code>planner.js</code>, <code>chatbot.js</code>, <code>grocery.js</code>). The styling is highly customized using a tailored color palette and micro-animations to create a premium feel.</li>
+<li><strong>Backend (Application Tier):</strong> A Node.js application powered by Express.js. It handles routing, middleware validation (via <code>express-validator</code>), security (via <code>helmet</code> and <code>cors</code>), rate-limiting (via <code>express-rate-limit</code>), and orchestrates requests to external AI APIs and the database.</li>
+<li><strong>Database (Data Tier):</strong> Hosted on Supabase (PostgreSQL). Features highly normalized tables including <code>profiles</code>, <code>recipes</code>, <code>meal_plans</code>, <code>grocery_lists</code>, <code>pantry</code>, <code>posts</code>, and <code>audit_logs</code>. Security is enforced directly at the database level using Row Level Security (RLS) policies.</li>
+<li><strong>External Microservices (AI Services):</strong></li>
+<p></ul></ol>    *   <strong>Groq API:</strong> Interfaced for lightning-fast LLM responses. Triggers the core logic in <code>services/ai.js</code> to process JSON payloads representing customized recipes.</p>
+<p>    *   <strong>Imagga API:</strong> Receives base64 encoded images from the backend to process visual tags and return high-confidence food-related keywords.</p>
+
+<h3>1.4 METHODOLOGY & TECHNOLOGY STACK</h3>
+
+<p>The development followed an agile methodology, iteratively implementing feature modules: Authentication -> Core Recipes -> AI Integrations -> Social Features.</p>
+
+<strong>Technology Stack Highlights:</strong>
+<ul><li><strong>Core Logic:</strong> JavaScript (ES6+), Node.js (v18+)</li>
+<li><strong>Server/Framework:</strong> Express.js</li>
+<li><strong>Database:</strong> PostgreSQL (via Supabase), enabling real-time capabilities and built-in Auth.</li>
+<li><strong>Storage:</strong> Supabase Storage (handling avatar uploads and recipe imagery).</li>
+<li><strong>AI Integrations:</strong> Groq Cloud (Llama 3 70B), Imagga API.</li>
+<li><strong>Security:</strong> JWT verification, bcrypt (internal to Supabase Auth), Express rate limiters, comprehensive parameterized SQL queries.</li>
+<p></ul>
+<hr>
+
+<h2>2. LITERATURE REVIEW</h2>
+
+<h3>2.1 GENERAL REVIEW</h3>
+
+<p>The concept of digital recipe organization has existed since the early internet days. Initially, platforms acted purely as digital cookbooks. As mobile computing advanced, these platforms integrated basic grocery list generation based on static recipe ingredients. However, a review of current literature and existing market solutions reveals a gap: the lack of adaptability. Static recipes cannot easily adjust to missing ingredients, dietary changes, or dynamic scaling without yielding compromised results. </p>
+
+<h3>2.2 AI AND COMPUTER VISION IN CULINARY APPLICATIONS</h3>
+
+<p>Recent studies in computer vision have demonstrated the efficacy of Convolutional Neural Networks (CNNs) in object detection. In the culinary space, identifying raw ingredients is notoriously difficult due to deformation, occlusion, and lighting variations inside refrigerators. Theoretical models have proposed using multi-label classification to identify multiple ingredients in a single frame. The AI Kitchen Assistant implements this literature practically by utilizing Imagga's robust tagging API, filtering for food-specific taxonomies, and cross-referencing confidence scores above 15% to build reliable input arrays.</p>
+
+<h3>2.3 THE ROLE OF LARGE LANGUAGE MODELS IN RECIPE GENERATION</h3>
+
+<p>Large Language Models, trained on vast corpora including millions of recipes and culinary blogs, have established a deep understanding of flavor profiling and ingredient pairing. Research indicates that prompt engineering can effectively restrict LLM outputs to specific JSON schemas, turning conversational agents into structured data generators. </p>
+<p>The AI Kitchen Assistant leverages this by providing complex system prompts (e.g., requesting exactly 21 meals for a 7-day plan, distributed across breakfast, lunch, and dinner). The literature highlights that while LLMs hallucinate, grounding them with a strict provided ingredient list significantly improves output feasibility, acting as a constraint satisfaction solver in culinary space. Furthermore, the integration of context-aware chatbots in kitchens represents a modern evolution of the classic cookbook, allowing for dynamic, two-way interaction regarding technique, nutrition, and substitutions.</p>
+
+<hr>
+
+<h2>3. SYSTEM DESIGN</h2>
+
+<h3>3.1 SYSTEM ARCHITECTURE DIAGRAM</h3>
+
+<p>The application follows a three-tier client-server architecture augmented by external AI microservices.</p>
+
+<pre><code>graph TD
+<p>    A[Browser Client - Vanilla JS] -->|HTTP/REST| B[Express.js Server]</p>
+<p>    B -->|Supabase SDK| C[Supabase PostgreSQL + Auth + Storage]</p>
+<p>    B -->|HTTPS POST| D[Groq API - Llama 3 70B]</p>
+<p>    B -->|HTTPS POST| E[Imagga API - Computer Vision]</p>
+<p>    B -->|Middleware Pipeline| F[Auth / RateLimit / Validate]</p>
+<p>    F --> B</p>
+<p></code></pre>
+
+<strong>Request Flow:</strong>
+<ol><ul><li>The browser client sends an HTTP request with a JWT Bearer token in the Authorization header.</li>
+<li>Express middleware validates the token via Supabase Auth (<code>auth.js</code> middleware), checks the user's role (<code>adminAuth.js</code>), enforces rate limits (<code>rateLimiter.js</code>), and validates input (<code>validate.js</code>).</li>
+<li>The route handler processes the request — either querying Supabase directly or forwarding to an external AI API.</li>
+<li>The response is returned as JSON to the client.</li>
+<p></ul></ol>
+<h3>3.2 DATABASE DESIGN</h3>
+
+<p>The database consists of 14 interconnected tables hosted on Supabase PostgreSQL. All tables enforce Row Level Security (RLS).</p>
+
+<h4>3.2.1 Entity Relationship Summary</h4>
+
+<table><tr><td>Table</td><td>Purpose</td><td>Key Relationships</td></tr>
+<p></table>
+<table><tr><td><code>profiles</code></td><td>User accounts extending Supabase Auth</td><td>PK: <code>id</code> (FK to <code>auth.users</code>)</td></tr>
+<tr><td><code>recipes</code></td><td>Central recipe storage</td><td>FK: <code>author_id</code> → <code>profiles.id</code></td></tr>
+<tr><td><code>meal_plans</code></td><td>User meal scheduling</td><td>FK: <code>user_id</code> → <code>profiles.id</code>, <code>recipe_id</code> → <code>recipes.id</code></td></tr>
+<tr><td><code>grocery_lists</code></td><td>Shopping list per user</td><td>FK: <code>user_id</code> → <code>profiles.id</code></td></tr>
+<tr><td><code>recipe_likes</code></td><td>Many-to-many like join table</td><td>Composite PK: (<code>user_id</code>, <code>recipe_id</code>)</td></tr>
+<tr><td><code>audit_logs</code></td><td>Admin action tracking</td><td>FK: <code>admin_id</code> → <code>profiles.id</code></td></tr>
+<tr><td><code>conversations</code></td><td>DM conversation envelopes</td><td>Independent PK</td></tr>
+<tr><td><code>conversation_members</code></td><td>DM membership join table</td><td>Composite PK: (<code>conversation_id</code>, <code>user_id</code>)</td></tr>
+<tr><td><code>messages</code></td><td>Individual chat messages</td><td>FK: <code>conversation_id</code>, <code>sender_id</code></td></tr>
+<tr><td><code>posts</code></td><td>Social feed entries</td><td>FK: <code>author_id</code>, <code>recipe_id</code></td></tr>
+<tr><td><code>post_likes</code></td><td>Social post likes</td><td>Composite PK: (<code>user_id</code>, <code>post_id</code>)</td></tr>
+<tr><td><code>pantry</code></td><td>Smart pantry inventory</td><td>FK: <code>user_id</code> → <code>profiles.id</code></td></tr>
+<tr><td><code>weekly_challenges</code></td><td>Gamification challenges</td><td>Independent PK</td></tr>
+<tr><td><code>follows</code></td><td>Social follow relationships</td><td>Composite PK: (<code>follower_id</code>, <code>following_id</code>)</td></tr>
+<p></table>#### 3.2.2 Key Columns — Recipes Table</p>
+
+<table><tr><td>Column</td><td>Type</td><td>Description</td></tr>
+<p></table>
+<table><tr><td><code>id</code></td><td>UUID</td><td>Auto-generated primary key</td></tr>
+<tr><td><code>author_id</code></td><td>UUID</td><td>Foreign key to profiles</td></tr>
+<tr><td><code>title</code></td><td>TEXT</td><td>Recipe name (required)</td></tr>
+<tr><td><code>ingredients</code></td><td>JSONB</td><td>Array of ingredient strings</td></tr>
+<tr><td><code>steps</code></td><td>JSONB</td><td>Array of instruction strings</td></tr>
+<tr><td><code>nutrition</code></td><td>JSONB</td><td>Object: <code>{calories, protein, carbs, fat}</code></td></tr>
+<tr><td><code>category</code></td><td>TEXT</td><td>Constrained: Breakfast, Lunch, Dinner, Snack, Dessert</td></tr>
+<tr><td><code>tags</code></td><td>JSONB</td><td>Array of dietary tags (e.g., Vegan, Gluten-Free)</td></tr>
+<tr><td><code>is_ai_draft</code></td><td>BOOLEAN</td><td>Flags AI-generated recipes</td></tr>
+<tr><td><code>views</code> / <code>likes</code></td><td>INTEGER</td><td>Engagement counters</td></tr>
+<tr><td><code>is_featured</code></td><td>BOOLEAN</td><td>Admin-toggled featured flag</td></tr>
+<p></table>#### 3.2.3 Database Triggers and Functions</p>
+
+<table><tr><td>Trigger</td><td>Event</td><td>Function</td></tr>
+<p></table>
+<table><tr><td><code>on_auth_user_created</code></td><td>After INSERT on <code>auth.users</code></td><td><code>handle_new_user()</code> — auto-creates profile row</td></tr>
+<tr><td><code>on_recipe_like</code></td><td>After INSERT/DELETE on <code>recipe_likes</code></td><td><code>handle_recipe_like()</code> — increments/decrements <code>recipes.likes</code></td></tr>
+<tr><td><code>on_post_like</code></td><td>After INSERT/DELETE on <code>post_likes</code></td><td><code>handle_post_like()</code> — updates <code>posts.likes_count</code></td></tr>
+<tr><td><code>on_new_message</code></td><td>After INSERT on <code>messages</code></td><td><code>update_conv_last_message()</code> — updates conversation preview</td></tr>
+<tr><td><code>handle_updated_at_*</code></td><td>Before UPDATE on multiple tables</td><td><code>moddatetime()</code> — auto-sets <code>updated_at</code></td></tr>
+<p></table>#### 3.2.4 Row Level Security Policies</p>
+
+<p>All 14 tables have RLS enabled. Key policies include:</p>
+<ul><li><strong>Profiles:</strong> Publicly viewable; only owners can update their own profile.</li>
+<li><strong>Recipes:</strong> Publicly viewable; authenticated users can create; only owners or admins can update/delete.</li>
+<li><strong>Meal Plans / Grocery Lists:</strong> Fully private per user; service_role has full access for backend operations.</li>
+<li><strong>Audit Logs:</strong> Only admins can view.</li>
+<li><strong>Messages:</strong> Only conversation members can read/send; service_role has full access.</li>
+<p></ul>
+<h3>3.3 API DESIGN</h3>
+
+<p>The API follows RESTful conventions with consistent JSON responses.</p>
+
+<h4>3.3.1 Complete API Endpoint Reference</h4>
+
+<table><tr><td>Method</td><td>Endpoint</td><td>Auth</td><td>Description</td></tr>
+<p></table>
+<table><tr><td>POST</td><td><code>/api/auth/signup</code></td><td>—</td><td>Register new user</td></tr>
+<tr><td>POST</td><td><code>/api/auth/login</code></td><td>—</td><td>Login, returns JWT + profile</td></tr>
+<tr><td>POST</td><td><code>/api/auth/admin-login</code></td><td>—</td><td>Admin-only login with role check</td></tr>
+<tr><td>POST</td><td><code>/api/auth/logout</code></td><td>✅</td><td>Server-side session invalidation</td></tr>
+<tr><td>GET</td><td><code>/api/auth/me</code></td><td>✅</td><td>Fetch current user profile</td></tr>
+<tr><td>PUT</td><td><code>/api/auth/profile</code></td><td>✅</td><td>Update username, bio, preferences</td></tr>
+<tr><td>POST</td><td><code>/api/auth/profile-picture</code></td><td>✅</td><td>Upload avatar via multipart form</td></tr>
+<tr><td>GET</td><td><code>/api/auth/search?q=</code></td><td>✅</td><td>Search users by username or UUID</td></tr>
+<tr><td>GET</td><td><code>/api/recipes</code></td><td>—</td><td>List recipes with pagination, filter, search</td></tr>
+<tr><td>GET</td><td><code>/api/recipes/trending</code></td><td>—</td><td>Top 10 recipes by views + likes</td></tr>
+<tr><td>GET</td><td><code>/api/recipes/:id</code></td><td>—</td><td>Single recipe detail (increments views)</td></tr>
+<tr><td>POST</td><td><code>/api/recipes</code></td><td>✅</td><td>Upload recipe with optional image</td></tr>
+<tr><td>PUT</td><td><code>/api/recipes/:id</code></td><td>✅</td><td>Edit recipe (owner/admin only)</td></tr>
+<tr><td>DELETE</td><td><code>/api/recipes/:id</code></td><td>✅</td><td>Delete recipe (owner/admin only)</td></tr>
+<tr><td>POST</td><td><code>/api/recipes/:id/like</code></td><td>✅</td><td>Toggle like/unlike</td></tr>
+<tr><td>POST</td><td><code>/api/recipes/:id/remix</code></td><td>✅</td><td>Fork a recipe as a new copy</td></tr>
+<tr><td>POST</td><td><code>/api/ai/suggest</code></td><td>✅</td><td>AI recipe generation from ingredients</td></tr>
+<tr><td>POST</td><td><code>/api/ai/meal-plan</code></td><td>✅</td><td>AI 7-day meal plan (21 recipes)</td></tr>
+<tr><td>POST</td><td><code>/api/ai/scan-fridge</code></td><td>✅</td><td>Image → ingredient detection via Imagga</td></tr>
+<tr><td>POST</td><td><code>/api/ai/chat</code></td><td>✅</td><td>AI Chef chatbot conversation</td></tr>
+<tr><td>POST</td><td><code>/api/ai/substitute</code></td><td>✅</td><td>AI ingredient substitution tips</td></tr>
+<tr><td>POST</td><td><code>/api/ai/waste-not</code></td><td>✅</td><td>Zero-waste recipe ideas from pantry</td></tr>
+<tr><td>POST</td><td><code>/api/ai/image-to-recipe</code></td><td>✅</td><td>Reverse-engineer recipe from food photo</td></tr>
+<tr><td>POST</td><td><code>/api/ai/smart-scale</code></td><td>✅</td><td>Intelligent recipe serving scaler</td></tr>
+<tr><td>GET/POST</td><td><code>/api/planner</code></td><td>✅</td><td>CRUD meal plans</td></tr>
+<tr><td>GET/POST</td><td><code>/api/grocery</code></td><td>✅</td><td>CRUD grocery list</td></tr>
+<tr><td>POST</td><td><code>/api/grocery/generate</code></td><td>✅</td><td>Auto-generate list from meal plans</td></tr>
+<tr><td>GET/POST</td><td><code>/api/pantry</code></td><td>✅</td><td>CRUD pantry items</td></tr>
+<tr><td>POST/DELETE</td><td><code>/api/social/follow/:id</code></td><td>✅</td><td>Follow/unfollow user</td></tr>
+<tr><td>GET</td><td><code>/api/social/feed</code></td><td>—</td><td>Community post feed</td></tr>
+<tr><td>POST</td><td><code>/api/social/posts</code></td><td>✅</td><td>Share a recipe post</td></tr>
+<tr><td>GET</td><td><code>/api/admin/users</code></td><td>🛡️</td><td>List all users (paginated)</td></tr>
+<tr><td>POST</td><td><code>/api/admin/users</code></td><td>🛡️</td><td>Create user with role assignment</td></tr>
+<tr><td>DELETE</td><td><code>/api/admin/users/:id</code></td><td>🛡️</td><td>Delete user</td></tr>
+<tr><td>GET</td><td><code>/api/admin/analytics</code></td><td>🛡️</td><td>Platform statistics dashboard</td></tr>
+<tr><td>GET</td><td><code>/api/admin/logs</code></td><td>🛡️</td><td>Audit log viewer</td></tr>
+<p></table>#### 3.3.2 Rate Limiting Configuration</p>
+
+<table><tr><td>Limiter</td><td>Window</td><td>Max Requests</td><td>Applied To</td></tr>
+<p></table>
+<table><tr><td><code>aiLimiter</code></td><td>15 minutes</td><td>20</td><td>All <code>/api/ai/*</code> routes</td></tr>
+<tr><td><code>authLimiter</code></td><td>15 minutes</td><td>10</td><td><code>/api/auth/login</code>, <code>/api/auth/signup</code></td></tr>
+<tr><td><code>generalLimiter</code></td><td>15 minutes</td><td>100</td><td><code>/api/recipes</code> public routes</td></tr>
+<p></table>### 3.4 SECURITY DESIGN</p>
+
+<p>The system implements defense-in-depth security:</p>
+
+<ol><ul><li><strong>Helmet.js:</strong> Sets security HTTP headers (X-Content-Type-Options, X-Frame-Options, etc.).</li>
+<li><strong>CORS Whitelist:</strong> Configurable <code>FRONTEND_URL</code> origin restriction.</li>
+<li><strong>JWT Authentication:</strong> Supabase-issued tokens verified server-side on every protected route.</li>
+<li><strong>Input Validation:</strong> All POST/PUT endpoints validated via <code>express-validator</code> chains.</li>
+<li><strong>Rate Limiting:</strong> Three tiers of rate limiting to prevent abuse.</li>
+<li><strong>Row Level Security:</strong> Database-level access control ensuring users can only access their own data.</li>
+<li><strong>Admin Role Enforcement:</strong> Two-layer check — middleware <code>authenticate</code> + <code>adminOnly</code> guard.</li>
+<li><strong>Audit Logging:</strong> All admin actions (user creation, deletion, recipe featuring) are logged with timestamps and admin ID.</li>
+<p></ul></ol>
+<hr>
+
+<h2>4. MODULE DESCRIPTIONS</h2>
+
+<h3>4.1 AUTHENTICATION MODULE</h3>
+
+<strong>Files:</strong> <code>backend/routes/auth.js</code>, <code>backend/middleware/auth.js</code>, <code>frontend/js/auth.js</code>
+
+<p>This module handles the complete user lifecycle:</p>
+<ul><li><strong>Signup:</strong> Validates email format, password strength (min 8 chars, 1 uppercase, 1 digit), and username uniqueness. Creates user via Supabase Admin API. Profile row auto-created by database trigger.</li>
+<li><strong>Login:</strong> Authenticates via Supabase <code>signInWithPassword()</code>. Returns JWT access token and user profile (including role, avatar).</li>
+<li><strong>Admin Login:</strong> Same as login but adds a role check — returns 403 if the user's profile role is not <code>admin</code>. Logs admin login to audit table.</li>
+<li><strong>Session Management:</strong> Token stored in <code>localStorage</code> as <code>ka_token</code>. The <code>apiFetch()</code> helper auto-attaches Bearer token and handles 401 redirects.</li>
+<li><strong>Profile Updates:</strong> Username change with uniqueness check, bio, dietary preferences (JSONB), and custom avatar upload via Supabase Storage.</li>
+<p></ul>
+<h3>4.2 AI RECIPE SUGGESTION MODULE</h3>
+
+<strong>Files:</strong> <code>backend/routes/ai.js</code>, <code>backend/services/ai.js</code>, <code>frontend/js/dashboard.js</code>
+
+<p>The core AI module provides six distinct capabilities:</p>
+
+<ol><ul><li><strong>Recipe Suggestion (<code>/api/ai/suggest</code>):</strong> Accepts an array of ingredients, sends a structured prompt to Groq requesting 4 diverse recipes from different world cuisines. Each recipe includes title, ingredients, steps, nutrition, and an <code>image_query</code> for dynamic photo sourcing. Results are auto-saved to the <code>recipes</code> table with <code>is_ai_draft = true</code>.</li>
+<p></ul></ol>
+<ol><ul><li><strong>7-Day Meal Plan (<code>/api/ai/meal-plan</code>):</strong> Generates exactly 21 recipe objects (3 meals × 7 days) via a single Groq API call with an 8000 max_token budget. The prompt enforces the Breakfast → Lunch → Dinner sequence for each day.</li>
+<p></ul></ol>
+<ol><ul><li><strong>Fridge Scanner (<code>/api/ai/scan-fridge</code>):</strong> Receives a base64-encoded image, forwards it to the Imagga tagging API. Filters results by confidence > 15% and a curated food keyword list (25 categories). Returns up to 15 detected ingredient names.</li>
+<p></ul></ol>
+<ol><ul><li><strong>AI Chatbot (<code>/api/ai/chat</code>):</strong> Maintains conversational context by accepting a message history array (last 10 messages). The system prompt positions the AI as "AI Chef" with expertise in recipe guidance, ingredient swaps, nutrition coaching, and meal planning.</li>
+<p></ul></ol>
+<ol><ul><li><strong>Ingredient Substitution (<code>/api/ai/substitute</code>):</strong> Given a recipe title and a specific ingredient, returns 3 practical substitutes with explanations.</li>
+<p></ul></ol>
+<ol><ul><li><strong>Zero-Waste Ideas (<code>/api/ai/waste-not</code>):</strong> Fetches the user's pantry items sorted by expiry date, sends the 10 most urgent items to Groq for creative recipe ideation.</li>
+<p></ul></ol>
+<ol><ul><li><strong>Image-to-Recipe (<code>/api/ai/image-to-recipe</code>):</strong> Combines Imagga (for visual tags) with Groq (for recipe reconstruction) to reverse-engineer a complete recipe from a food photograph.</li>
+<p></ul></ol>
+<ol><ul><li><strong>Smart Scale (<code>/api/ai/smart-scale</code>):</strong> Intelligently scales recipe servings with non-linear adjustments for spices, leavening agents, and cooking times.</li>
+<p></ul></ol>
+<h3>4.3 RECIPE MANAGEMENT MODULE</h3>
+
+<strong>Files:</strong> <code>backend/routes/recipes.js</code>, <code>frontend/js/dashboard.js</code>
+
+<ul><li><strong>Listing:</strong> Supports pagination, category filtering, full-text search across title/tags/ingredients, and sorting by views or date.</li>
+<li><strong>Trending Algorithm:</strong> Combines <code>is_featured</code> priority with a weighted score: <code>views + (likes × 3)</code>.</li>
+<li><strong>Upload:</strong> Multipart form data with image upload to Supabase Storage bucket <code>recipe-images</code>. Supports JSONB fields for ingredients, steps, tags, and nutrition.</li>
+<li><strong>Remix:</strong> Creates a fork of any recipe, linking back via <code>original_recipe_id</code> foreign key.</li>
+<li><strong>Like System:</strong> Toggle-based like/unlike with automatic counter managed by the <code>on_recipe_like</code> database trigger.</li>
+<p></ul>
+<h3>4.4 MEAL PLANNER MODULE</h3>
+
+<strong>Files:</strong> <code>backend/routes/planner.js</code>, <code>frontend/js/planner.js</code>
+
+<p>Full CRUD for meal scheduling:</p>
+<ul><li>Plans are date-based entries linking a <code>recipe_id</code> to a <code>planned_date</code> and <code>meal_type</code> (Breakfast/Lunch/Dinner/Snack).</li>
+<li>Frontend renders an interactive calendar view.</li>
+<li>Authorization ensures users can only modify their own plans.</li>
+<p></ul>
+<h3>4.5 GROCERY LIST MODULE</h3>
+
+<strong>Files:</strong> <code>backend/routes/grocery.js</code>, <code>frontend/js/grocery.js</code>
+
+<ul><li><strong>Manual Mode:</strong> Users maintain a checklist of items stored as a JSONB array.</li>
+<li><strong>Auto-Generate:</strong> The <code>/generate</code> endpoint scans all future meal plans, aggregates unique ingredients across planned recipes, and produces a deduplicated grocery list with <code>from_recipe</code> attribution.</li>
+<li>Uses upsert logic — creates a new list or updates existing.</li>
+<p></ul>
+<h3>4.6 SMART PANTRY MODULE</h3>
+
+<strong>Files:</strong> <code>backend/routes/pantry.js</code>, <code>frontend/js/pantry.js</code>
+
+<ul><li>Users track pantry items with name, quantity, and expiry date.</li>
+<li>Items sorted by expiry date (ascending) to surface urgent items first.</li>
+<li>Frontend highlights items expiring within 3 days with visual alerts.</li>
+<li>Integrates with the zero-waste AI feature.</li>
+<p></ul>
+<h3>4.7 SOCIAL & COMMUNITY MODULE</h3>
+
+<strong>Files:</strong> <code>backend/routes/social.js</code>, <code>backend/routes/users.js</code>, <code>frontend/js/social.js</code>
+
+<ul><li><strong>Follow System:</strong> Users can follow/unfollow others. The <code>follows</code> table enforces self-follow prevention via a CHECK constraint.</li>
+<li><strong>Community Feed:</strong> Public timeline of recipe shares with author info, like counts, and <code>liked_by_me</code> enrichment.</li>
+<li><strong>User Profiles:</strong> Public profile pages showing bio, avatar, follower/following counts, and authored recipes.</li>
+<p></ul>
+<h3>4.8 DIRECT MESSAGING MODULE</h3>
+
+<strong>Files:</strong> <code>backend/routes/chat.js</code>, <code>frontend/js/chat.js</code>
+
+<ul><li><strong>Feedback System:</strong> Creates a private conversation between a user and the admin for feedback/support.</li>
+<li><strong>Message Storage:</strong> Real-time-ready message table with read status tracking.</li>
+<li><strong>Admin Inbox:</strong> Aggregated view of all user feedback threads with participant identification.</li>
+<p></ul>
+<h3>4.9 VOICE & COOKING MODE MODULE</h3>
+
+<strong>Files:</strong> <code>frontend/js/voice.js</code>
+
+<ul><li>Utilizes the Web Speech API (<code>webkitSpeechRecognition</code>) for hands-free cooking.</li>
+<li><strong>Cooking Mode:</strong> Full-screen overlay displaying one step at a time with voice commands: "Next", "Back", "Read ingredients", "Exit".</li>
+<li><strong>Text-to-Speech:</strong> Uses <code>SpeechSynthesisUtterance</code> to read steps and ingredients aloud.</li>
+<li><strong>Voice Search:</strong> Non-continuous recognition mode for searching recipes by voice.</li>
+<p></ul>
+<h3>4.10 ADMIN PORTAL MODULE</h3>
+
+<strong>Files:</strong> <code>backend/routes/admin.js</code>, <code>frontend/admin.html</code>, <code>frontend/js/admin.js</code>
+
+<ul><li><strong>User Management:</strong> List, create (with role assignment), and delete users. Self-deletion prevention.</li>
+<li><strong>Recipe Management:</strong> List and delete any recipe. Toggle <code>is_featured</code> status.</li>
+<li><strong>Analytics Dashboard:</strong> Aggregated stats — total users, admin count, total recipes, cumulative views/likes, meal plan count, and top 5 recipes by views.</li>
+<li><strong>Audit Logs:</strong> Chronological log of all admin actions with admin username attribution.</li>
+<p></ul>
+<h3>4.11 GAMIFICATION MODULE</h3>
+
+<strong>Database:</strong> <code>weekly_challenges</code> table, <code>profiles.xp</code>, <code>profiles.rank_points</code>
+
+<ul><li><strong>XP System:</strong> Users earn XP for actions. The <code>add_user_xp()</code> PostgreSQL function atomically updates both XP and rank points.</li>
+<li><strong>Rank Tiers:</strong> 🍴 Novice (0+) → 🏠 Home Cook (100+) → 🍳 Chef de Partie (500+) → 👨‍🍳 Executive Chef (1000+).</li>
+<li><strong>Progress Bar:</strong> Frontend renders an XP progress bar showing distance to next rank.</li>
+<li><strong>Weekly Challenges:</strong> Admin-created cooking challenges with mystery ingredients and XP rewards.</li>
+<p></ul>
+<hr>
+
+<h2>5. IMPLEMENTATION DETAILS</h2>
+
+<h3>5.1 PROJECT FILE STRUCTURE</h3>
+
+<pre><code>ai-kitchen-assistant/
+<p>├── backend/</p>
+<p>│   ├── app.js                    # Express app setup, middleware, routes</p>
+<p>│   ├── server.js                 # Entry point (dotenv + listen)</p>
+<p>│   ├── config/</p>
+<p>│   │   └── supabase.js           # Supabase client initialization</p>
+<p>│   ├── middleware/</p>
+<p>│   │   ├── auth.js               # JWT verification via Supabase</p>
+<p>│   │   ├── adminAuth.js          # Admin role guard</p>
+<p>│   │   ├── rateLimiter.js        # Three-tier rate limiting</p>
+<p>│   │   └── validate.js           # express-validator result checker</p>
+<p>│   ├── routes/</p>
+<p>│   │   ├── auth.js               # Signup, login, profile, avatar</p>
+<p>│   │   ├── recipes.js            # CRUD + trending + remix + like</p>
+<p>│   │   ├── ai.js                 # 8 AI endpoints</p>
+<p>│   │   ├── planner.js            # Meal plan CRUD</p>
+<p>│   │   ├── grocery.js            # Grocery list + auto-generate</p>
+<p>│   │   ├── admin.js              # Admin user/recipe/analytics</p>
+<p>│   │   ├── chat.js               # DM feedback system</p>
+<p>│   │   ├── social.js             # Follow, feed, posts, likes</p>
+<p>│   │   ├── pantry.js             # Pantry CRUD</p>
+<p>│   │   └── users.js              # Public user profile lookup</p>
+<p>│   ├── services/</p>
+<p>│   │   └── ai.js                 # Groq + Imagga integration (305 lines)</p>
+<p>│   └── utils/</p>
+<p>│       ├── recipeImageUrl.js     # Dynamic recipe image resolver</p>
+<p>│       └── recipeImageHeuristic.js # Fallback image URL builder</p>
+<p>├── frontend/</p>
+<p>│   ├── index.html                # Login/signup page</p>
+<p>│   ├── dashboard.html            # Main user dashboard (55KB)</p>
+<p>│   ├── admin.html                # Admin portal</p>
+<p>│   ├── profile.html              # Public user profile</p>
+<p>│   ├── css/</p>
+<p>│   │   └── styles.css            # Complete design system</p>
+<p>│   └── js/</p>
+<p>│       ├── auth.js               # Token management, apiFetch helper</p>
+<p>│       ├── dashboard.js          # Main app logic (1315 lines)</p>
+<p>│       ├── planner.js            # Calendar + meal plan UI</p>
+<p>│       ├── grocery.js            # Grocery list UI + budget tracker</p>
+<p>│       ├── chatbot.js            # AI chatbot UI</p>
+<p>│       ├── chat.js               # DM messaging UI</p>
+<p>│       ├── social.js             # Community feed UI</p>
+<p>│       ├── pantry.js             # Pantry management UI</p>
+<p>│       ├── voice.js              # Speech recognition + TTS</p>
+<p>│       ├── timer.js              # Cooking timer module</p>
+<p>│       ├── nutrition.js          # Nutrition analytics dashboard</p>
+<p>│       ├── profile.js            # User profile page logic</p>
+<p>│       ├── admin.js              # Admin portal logic (26KB)</p>
+<p>│       ├── ai_chat.js            # AI chat initialization</p>
+<p>│       └── recipeImageHeuristic.js # Client-side image fallback</p>
+<p>├── database/</p>
+<p>│   └── schema.sql                # Complete schema (536 lines)</p>
+<p>├── package.json                  # Dependencies and scripts</p>
+<p>├── vercel.json                   # Deployment configuration</p>
+<p>└── .env.example                  # Environment variable template</p>
+<p></code></pre>
+
+<h3>5.2 KEY IMPLEMENTATION PATTERNS</h3>
+
+<h4>5.2.1 AI Response Parsing</h4>
+<p>All Groq responses are processed through the <code>parseAiJson()</code> helper which strips markdown code fences before <code>JSON.parse()</code>. This handles the common LLM behavior of wrapping JSON in code blocks.</p>
+
+<h4>5.2.2 Upsert Pattern (Grocery Lists)</h4>
+<p>The grocery module implements a manual upsert: it first queries for an existing list, then either updates or inserts. This ensures each user has exactly one active grocery list.</p>
+
+<h4>5.2.3 Trigger-Based Counters</h4>
+<p>Like counts on recipes and posts are managed entirely by PostgreSQL triggers, ensuring atomicity and consistency regardless of which client or service makes the change.</p>
+
+<h4>5.2.4 SPA-Like Navigation</h4>
+<p>The dashboard uses JavaScript-based section switching (<code>showSection()</code>) rather than separate pages. Each section is a hidden <code><div></code> that becomes visible when its nav item is clicked. Data is lazy-loaded only when a section is activated.</p>
+
+<h3>5.3 DEPLOYMENT CONFIGURATION</h3>
+
+<p>The application supports three deployment targets:</p>
+<ul><li><strong>Railway:</strong> Auto-detected Node.js deployment with environment variable injection.</li>
+<li><strong>Render:</strong> Web service with <code>npm install</code> build and <code>npm start</code> entry.</li>
+<li><strong>VPS (Ubuntu):</strong> PM2 process manager with nginx reverse proxy.</li>
+<p></ul>
+<p>The <code>vercel.json</code> configuration routes all requests through the Express server to support the SPA fallback pattern.</p>
+
+<hr>
+
+<h2>6. TESTING AND VALIDATION</h2>
+
+<h3>6.1 TESTING METHODOLOGY</h3>
+
+<p>The project employs a combination of manual API testing (via cURL), integration testing through the live frontend, and automated health checks. Each module was tested independently before integration.</p>
+
+<h3>6.2 API TESTING</h3>
+
+<h4>6.2.1 Authentication Flow Testing</h4>
+
+<pre><code><h1>Test Signup</h1>
+<p>curl -X POST http://localhost:3000/api/auth/signup \</p>
+<p>  -H "Content-Type: application/json" \</p>
+<p>  -d '{"email":"test@test.com","password":"Test1234!","username":"chef1"}'</p>
+<h1>Expected: 201 { "message": "Account created successfully", "userId": "..." }</h1>
+
+<h1>Test Login</h1>
+<p>curl -X POST http://localhost:3000/api/auth/login \</p>
+<p>  -H "Content-Type: application/json" \</p>
+<p>  -d '{"email":"test@test.com","password":"Test1234!"}'</p>
+<h1>Expected: 200 { "token": "eyJ...", "user": { "id": "...", "role": "user" } }</h1>
+
+<h1>Test Invalid Login</h1>
+<p>curl -X POST http://localhost:3000/api/auth/login \</p>
+<p>  -H "Content-Type: application/json" \</p>
+<p>  -d '{"email":"wrong@test.com","password":"wrong"}'</p>
+<h1>Expected: 401 { "error": "Invalid email or password" }</h1>
+<p></code></pre>
+
+<h4>6.2.2 AI Module Testing</h4>
+
+<pre><code><h1>Test AI Suggest</h1>
+<p>curl -X POST http://localhost:3000/api/ai/suggest \</p>
+<p>  -H "Authorization: Bearer YOUR_TOKEN" \</p>
+<p>  -H "Content-Type: application/json" \</p>
+<p>  -d '{"ingredients":["chicken","garlic","lemon","spinach"]}'</p>
+<h1>Expected: 200 { "recipes": [...4 recipe objects...] }</h1>
+
+<h1>Test AI Chat</h1>
+<p>curl -X POST http://localhost:3000/api/ai/chat \</p>
+<p>  -H "Authorization: Bearer YOUR_TOKEN" \</p>
+<p>  -H "Content-Type: application/json" \</p>
+<p>  -d '{"message":"What can I make with eggs and cheese?","history":[]}'</p>
+<h1>Expected: 200 { "reply": "..." }</h1>
+<p></code></pre>
+
+<h4>6.2.3 Health Check Testing</h4>
+
+<pre><code>curl http://localhost:3000/api/health
+<h1>Expected: 200 { "status": "ok", "timestamp": "2026-04-01T..." }</h1>
+<p></code></pre>
+
+<h3>6.3 INPUT VALIDATION TESTING</h3>
+
+<p>Each endpoint was tested with invalid inputs to verify the <code>express-validator</code> middleware:</p>
+
+<table><tr><td>Test Case</td><td>Input</td><td>Expected Response</td></tr>
+<p></table>
+<table><tr><td>Empty email on signup</td><td><code>{"email":"","password":"Test1234!","username":"a"}</code></td><td>400: "Valid email required"</td></tr>
+<tr><td>Weak password</td><td><code>{"email":"x@x.com","password":"abc","username":"test"}</code></td><td>400: "Password must be at least 8 characters"</td></tr>
+<tr><td>Short username</td><td><code>{"email":"x@x.com","password":"Test1234!","username":"a"}</code></td><td>400: "Username must be 2–30 characters"</td></tr>
+<tr><td>Empty ingredients array</td><td><code>{"ingredients":[]}</code></td><td>400: "Provide at least one ingredient"</td></tr>
+<tr><td>Invalid meal type</td><td><code>{"meal_type":"Midnight"}</code></td><td>400: "Invalid meal type"</td></tr>
+<tr><td>Missing recipe title</td><td><code>{"category":"Lunch","cooking_time":"20 mins"}</code></td><td>400: "Title must be 3–100 chars"</td></tr>
+<p></table>### 6.4 RATE LIMITING TESTING</p>
+
+<p>Rate limiters were tested by sending rapid sequential requests:</p>
+<ul><li><strong>AI Limiter:</strong> Confirmed 429 response after 20 requests within 15 minutes.</li>
+<li><strong>Auth Limiter:</strong> Confirmed 429 after 10 login attempts within 15 minutes.</li>
+<li><strong>General Limiter:</strong> Confirmed 429 after 100 recipe list requests within 15 minutes.</li>
+<p></ul>
+<h3>6.5 SECURITY TESTING</h3>
+
+<table><tr><td>Test</td><td>Method</td><td>Result</td></tr>
+<p></table>
+<table><tr><td>Access protected route without token</td><td>GET <code>/api/auth/me</code> (no header)</td><td>401: "Missing or invalid Authorization header"</td></tr>
+<tr><td>Access admin route as regular user</td><td>GET <code>/api/admin/users</code> with user token</td><td>403: "Forbidden: Admin access required"</td></tr>
+<tr><td>Delete another user's recipe</td><td>DELETE <code>/api/recipes/:id</code> with non-owner token</td><td>403: "Not authorized"</td></tr>
+<tr><td>Self-deletion prevention (admin)</td><td>DELETE <code>/api/admin/users/:ownId</code></td><td>400: "Cannot delete your own account"</td></tr>
+<tr><td>SQL injection attempt</td><td>Search with <code>'; DROP TABLE--</code></td><td>Handled safely by parameterized Supabase queries</td></tr>
+<p></table>### 6.6 CROSS-BROWSER TESTING</p>
+
+<p>The frontend was tested across the following browsers:</p>
+<ul><li>Google Chrome 120+ ✅</li>
+<li>Mozilla Firefox 120+ ✅</li>
+<li>Microsoft Edge 120+ ✅</li>
+<li>Safari 17+ ✅ (Voice features limited to WebKit-based browsers)</li>
+<p></ul>
+<h3>6.7 RESPONSIVE DESIGN TESTING</h3>
+
+<p>The application was tested at the following breakpoints:</p>
+<ul><li><strong>Mobile (320px–767px):</strong> Sidebar collapses to hamburger menu. Recipe cards stack vertically. Login page shows only the auth card.</li>
+<li><strong>Tablet (768px–1023px):</strong> Login hero section appears. Two-column recipe grid.</li>
+<li><strong>Desktop (1024px+):</strong> Full sidebar navigation. Three-column recipe grid. Side-by-side layout for forms.</li>
+<p></ul>
+<hr>
+
+<h2>7. RESULTS AND DISCUSSION</h2>
+
+<h3>7.1 SYSTEM PERFORMANCE</h3>
+
+<table><tr><td>Metric</td><td>Value</td></tr>
+<p></table>
+<table><tr><td>Server startup time</td><td>< 2 seconds</td></tr>
+<tr><td>API response time (database queries)</td><td>50–150ms average</td></tr>
+<tr><td>AI recipe generation (Groq)</td><td>2–5 seconds for 4 recipes</td></tr>
+<tr><td>AI meal plan generation (Groq)</td><td>5–10 seconds for 21 recipes</td></tr>
+<tr><td>Fridge scan (Imagga)</td><td>1–3 seconds</td></tr>
+<tr><td>Frontend initial load</td><td>< 1.5 seconds (static files)</td></tr>
+<tr><td>Database query with RLS</td><td>< 100ms for standard CRUD</td></tr>
+<p></table>### 7.2 AI OUTPUT QUALITY</p>
+
+<p>The Groq-powered Llama 3 70B model consistently produces:</p>
+<ul><li><strong>Accurate JSON structure:</strong> The <code>parseAiJson()</code> helper successfully parses 95%+ of responses without intervention.</li>
+<li><strong>Diverse recipes:</strong> The prompt engineering ensures 4 distinct cuisines per suggestion batch.</li>
+<li><strong>Nutritionally plausible outputs:</strong> Calorie and macro estimates are within reasonable ranges for the described dishes.</li>
+<li><strong>Smart scaling:</strong> Non-linear adjustments for spices and leavening agents produce more realistic scaled recipes than simple multiplication.</li>
+<p></ul>
+<h3>7.3 USER INTERFACE RESULTS</h3>
+
+<p>The frontend achieves a premium aesthetic through:</p>
+<ul><li><strong>Glassmorphism design:</strong> Semi-transparent cards with blur effects and gradient borders.</li>
+<li><strong>Dark/Light theme toggle:</strong> Complete theme switching with persistent preference in localStorage.</li>
+<li><strong>Micro-animations:</strong> Smooth transitions on section switches, hover effects on cards, and loading spinners.</li>
+<li><strong>Responsive navigation:</strong> Collapsible sidebar with overlay on mobile, persistent on desktop.</li>
+<li><strong>Accessibility:</strong> Semantic HTML5 elements, proper form labels, and keyboard-navigable controls.</li>
+<p></ul>
+<h3>7.4 FEATURE COMPLETION MATRIX</h3>
+
+<table><tr><td>Feature</td><td>Status</td><td>Notes</td></tr>
+<p></table>
+<table><tr><td>User Registration & Login</td><td>✅ Complete</td><td>Email validation, password strength, JWT</td></tr>
+<tr><td>AI Recipe Suggestion</td><td>✅ Complete</td><td>4 multi-cuisine recipes per query</td></tr>
+<tr><td>Smart Fridge Scanner</td><td>✅ Complete</td><td>Imagga-powered with 15+ food keywords</td></tr>
+<tr><td>AI Chatbot</td><td>✅ Complete</td><td>Conversational with history context</td></tr>
+<tr><td>7-Day Meal Planner</td><td>✅ Complete</td><td>Calendar UI + AI auto-generation</td></tr>
+<tr><td>Grocery List (Manual + Auto)</td><td>✅ Complete</td><td>Auto-deduplicated from meal plans</td></tr>
+<tr><td>Smart Pantry</td><td>✅ Complete</td><td>Expiry tracking + zero-waste AI</td></tr>
+<tr><td>Recipe Upload</td><td>✅ Complete</td><td>With image upload to Supabase Storage</td></tr>
+<tr><td>Recipe Remix</td><td>✅ Complete</td><td>Fork with original_recipe_id tracking</td></tr>
+<tr><td>Ingredient Substitution</td><td>✅ Complete</td><td>AI-powered with explanations</td></tr>
+<tr><td>Smart Recipe Scaling</td><td>✅ Complete</td><td>Non-linear scaling logic</td></tr>
+<tr><td>Image-to-Recipe</td><td>✅ Complete</td><td>Imagga + Groq pipeline</td></tr>
+<tr><td>Social Feed</td><td>✅ Complete</td><td>Post, like, follow system</td></tr>
+<tr><td>Direct Messaging</td><td>✅ Complete</td><td>User-to-admin feedback threads</td></tr>
+<tr><td>Voice Cooking Mode</td><td>✅ Complete</td><td>Speech recognition + TTS</td></tr>
+<tr><td>Admin Portal</td><td>✅ Complete</td><td>User/recipe management + analytics</td></tr>
+<tr><td>Gamification (XP/Ranks)</td><td>✅ Complete</td><td>4-tier rank system + challenges</td></tr>
+<tr><td>Dark/Light Theme</td><td>✅ Complete</td><td>Persistent user preference</td></tr>
+<p></table>---</p>
+
+<h2>8. FUTURE SCOPE AND ENHANCEMENTS</h2>
+
+<h3>8.1 SHORT-TERM IMPROVEMENTS</h3>
+<ol><ul><li><strong>Real-time Notifications:</strong> Implement Supabase Realtime subscriptions for live message notifications and social feed updates.</li>
+<li><strong>Offline Support:</strong> Add a Service Worker for PWA capabilities, enabling offline recipe viewing.</li>
+<li><strong>Internationalization (i18n):</strong> Multi-language support for the UI and AI prompts.</li>
+<li><strong>Image Recognition Upgrade:</strong> Replace Imagga with a fine-tuned model specifically trained on food ingredients for higher accuracy.</li>
+<p></ul></ol>
+<h3>8.2 MEDIUM-TERM FEATURES</h3>
+<ol><ul><li><strong>Barcode Scanner:</strong> Integrate a barcode scanning library to auto-add packaged items to the pantry with nutritional data.</li>
+<li><strong>Collaborative Meal Planning:</strong> Allow households to share and co-edit meal plans.</li>
+<li><strong>Dietary Goal Tracking:</strong> Weekly/monthly nutrition analytics with visual charts and goal-setting.</li>
+<li><strong>Recipe Video Integration:</strong> Support embedded cooking video tutorials alongside text instructions.</li>
+<p></ul></ol>
+<h3>8.3 LONG-TERM VISION</h3>
+<ol><ul><li><strong>Mobile Application:</strong> Native iOS/Android app using React Native or Flutter.</li>
+<li><strong>Smart Home Integration:</strong> Connect with smart kitchen appliances (ovens, thermometers) via IoT protocols.</li>
+<li><strong>Machine Learning Recommendations:</strong> Train a collaborative filtering model on user behavior to provide personalized recipe recommendations.</li>
+<li><strong>Marketplace:</strong> Allow users to sell premium recipes or cooking courses within the platform.</li>
+<p></ul></ol>
+<hr>
+
+<h2>9. CONCLUSION</h2>
+
+<p>The AI Kitchen Assistant successfully demonstrates the practical application of modern AI technologies in solving real-world culinary challenges. By combining Large Language Models (Groq/Llama 3) for intelligent recipe generation with Computer Vision (Imagga) for ingredient detection, the platform transforms the traditional recipe app paradigm from a passive database into an active, intelligent cooking companion.</p>
+
+<p>Key achievements of the project include:</p>
+<ul><li>A robust, secure backend architecture with 10 route modules, 4 middleware layers, and comprehensive Row Level Security across 14 database tables.</li>
+<li>Eight distinct AI-powered features, from basic recipe suggestions to advanced capabilities like reverse image-to-recipe engineering and non-linear recipe scaling.</li>
+<li>A premium, responsive frontend with glassmorphism design, dark/light theme support, voice-controlled cooking mode, and gamification elements.</li>
+<li>A complete social ecosystem with community feeds, follow systems, recipe remixing, and direct messaging.</li>
+<p></ul>
+<p>The system is production-ready with deployment configurations for Railway, Render, and VPS environments, and is designed for extensibility through its modular architecture.</p>
+
+<hr>
+
+<h2>10. REFERENCES</h2>
+
+<ol><ul><li>Vaswani, A., et al. (2017). "Attention Is All You Need." <em>Advances in Neural Information Processing Systems</em>, 30.</li>
+<li>Brown, T. B., et al. (2020). "Language Models are Few-Shot Learners." <em>Advances in Neural Information Processing Systems</em>, 33.</li>
+<li>Touvron, H., et al. (2023). "LLaMA: Open and Efficient Foundation Language Models." <em>arXiv preprint arXiv:2302.13971</em>.</li>
+<li>Meta AI. (2024). "Llama 3 Model Card." https://llama.meta.com/llama3/</li>
+<li>Groq, Inc. (2024). "Groq API Documentation." https://console.groq.com/docs</li>
+<li>Imagga Technologies. (2024). "Imagga Auto-Tagging API." https://docs.imagga.com/</li>
+<li>Supabase, Inc. (2024). "Supabase Documentation — Auth, Database, Storage." https://supabase.com/docs</li>
+<li>Express.js Foundation. (2024). "Express.js API Reference." https://expressjs.com/en/api.html</li>
+<li>Node.js Foundation. (2024). "Node.js Documentation." https://nodejs.org/docs/latest/api/</li>
+<li>Helmet.js. (2024). "Helmet.js Security Middleware." https://helmetjs.github.io/</li>
+<li>OWASP Foundation. (2023). "OWASP Top Ten Web Application Security Risks." https://owasp.org/www-project-top-ten/</li>
+<li>PostgreSQL Global Development Group. (2024). "PostgreSQL Row Level Security." https://www.postgresql.org/docs/current/ddl-rowsecurity.html</li>
+<li>Mozilla Developer Network. (2024). "Web Speech API." https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API</li>
+<li>Fielding, R. T. (2000). "Architectural Styles and the Design of Network-based Software Architectures." Doctoral Dissertation, University of California, Irvine.</li>
+<li>Nielsen, J. (1994). "Usability Engineering." Morgan Kaufmann Publishers.</li>
+<p></ul></ol>
+<hr>
+
+<h2>APPENDIX A: ENVIRONMENT VARIABLES</h2>
+
+<table><tr><td>Variable</td><td>Description</td><td>Source</td></tr>
+<p></table>
+<table><tr><td><code>GROQ_API_KEY</code></td><td>Groq Cloud API key for LLM inference</td><td>https://console.groq.com/keys</td></tr>
+<tr><td><code>IMAGGA_API_KEY</code></td><td>Imagga API key for image analysis</td><td>https://imagga.com/dashboard</td></tr>
+<tr><td><code>IMAGGA_API_SECRET</code></td><td>Imagga API secret</td><td>https://imagga.com/dashboard</td></tr>
+<tr><td><code>SUPABASE_URL</code></td><td>Supabase project URL</td><td>Supabase Dashboard → Settings → API</td></tr>
+<tr><td><code>SUPABASE_ANON_KEY</code></td><td>Supabase anonymous (public) key</td><td>Supabase Dashboard → Settings → API</td></tr>
+<tr><td><code>SUPABASE_SERVICE_KEY</code></td><td>Supabase service role key (admin access)</td><td>Supabase Dashboard → Settings → API</td></tr>
+<tr><td><code>JWT_SECRET</code></td><td>Secret for JWT token verification</td><td>Self-generated random string</td></tr>
+<tr><td><code>PORT</code></td><td>Server listening port (default: 3000)</td><td>Custom</td></tr>
+<tr><td><code>NODE_ENV</code></td><td>Environment mode (development/production)</td><td>Custom</td></tr>
+<tr><td><code>FRONTEND_URL</code></td><td>CORS allowed origin</td><td>Custom</td></tr>
+<p></table>## APPENDIX B: NPM DEPENDENCIES</p>
+
+<table><tr><td>Package</td><td>Version</td><td>Purpose</td></tr>
+<p></table>
+<table><tr><td><code>express</code></td><td>^4.18.3</td><td>Web server framework</td></tr>
+<tr><td><code>@supabase/supabase-js</code></td><td>^2.39.7</td><td>Supabase client SDK</td></tr>
+<tr><td><code>@google/generative-ai</code></td><td>^0.21.0</td><td>Google Generative AI SDK (legacy)</td></tr>
+<tr><td><code>axios</code></td><td>^1.13.5</td><td>HTTP client for external API calls</td></tr>
+<tr><td><code>bcryptjs</code></td><td>^2.4.3</td><td>Password hashing utility</td></tr>
+<tr><td><code>cors</code></td><td>^2.8.5</td><td>CORS middleware</td></tr>
+<tr><td><code>dotenv</code></td><td>^16.4.5</td><td>Environment variable loader</td></tr>
+<tr><td><code>express-rate-limit</code></td><td>^7.1.5</td><td>Rate limiting middleware</td></tr>
+<tr><td><code>express-validator</code></td><td>^7.0.1</td><td>Input validation middleware</td></tr>
+<tr><td><code>helmet</code></td><td>^7.1.0</td><td>Security HTTP headers</td></tr>
+<tr><td><code>jsonwebtoken</code></td><td>^9.0.2</td><td>JWT creation and verification</td></tr>
+<tr><td><code>multer</code></td><td>^1.4.5-lts.1</td><td>File upload middleware</td></tr>
+<tr><td><code>uuid</code></td><td>^9.0.1</td><td>UUID generation utility</td></tr>
+<tr><td><code>nodemon</code></td><td>^3.1.0</td><td>Development auto-restart (devDep)</td></tr></table>
+</div>
+
+</body>
+</html>

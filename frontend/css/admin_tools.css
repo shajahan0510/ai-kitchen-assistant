@@ -5,7 +5,7 @@
 
 /* ── Admin Sections ── */
 .admin-section { display: none; width: 100%; }
-.admin-section.active { display: block; animation: fadeSlideUp .45s cubic-bezier(.22,1,.36,1); }
+.admin-section.active { display: block; animation: fadeSlideUp var(--motion-slow) var(--ease-emphasized); }
 
 /* ── Analytics Grid ── */
 .analytics-grid {
@@ -22,7 +22,9 @@
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     position: relative; overflow: hidden;
-    transition: all .3s cubic-bezier(.22,1,.36,1);
+    transition: transform var(--motion-med) var(--ease-emphasized),
+        box-shadow var(--motion-med) var(--ease-standard),
+        border-color var(--motion-fast) var(--ease-standard);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
 }
@@ -63,7 +65,9 @@
     display: flex; align-items: flex-start;
     gap: 8px; padding: 10px 12px;
     border-bottom: 1px solid var(--glass-border);
-    font-size: .8rem; transition: all .15s;
+    font-size: .8rem;
+    transition: transform var(--motion-fast) var(--ease-standard),
+        background-color var(--motion-fast) var(--ease-standard);
     flex-wrap: wrap; border-radius: var(--r-sm);
 }
 .log-row:last-child { border-bottom: none; }
@@ -99,7 +103,9 @@
 .dm-sidebar-item {
     padding: 12px 14px; display: flex; align-items: center;
     gap: 10px; cursor: pointer;
-    transition: all .15s; border-bottom: 1px solid var(--glass-border);
+    transition: transform var(--motion-fast) var(--ease-standard),
+        background-color var(--motion-fast) var(--ease-standard);
+    border-bottom: 1px solid var(--glass-border);
     font-size: .86rem; position: relative;
 }
 .dm-sidebar-item:hover, .dm-sidebar-item.active {
@@ -231,7 +237,10 @@
     padding: 12px 14px;
     border-radius: var(--r-lg);
     cursor: pointer;
-    transition: all var(--t-spring);
+    transition: transform var(--motion-fast) var(--ease-standard),
+        background-color var(--motion-fast) var(--ease-standard),
+        border-color var(--motion-fast) var(--ease-standard),
+        box-shadow var(--motion-med) var(--ease-standard);
     margin-bottom: 4px;
     position: relative;
     border: 1px solid transparent;
@@ -355,7 +364,9 @@
     background: var(--grad-primary); color: #fff;
     border: none; cursor: pointer; font-weight: 700; font-size: .86rem;
     white-space: nowrap; flex-shrink: 0;
-    transition: all var(--t-spring);
+    transition: transform var(--motion-fast) var(--ease-standard),
+        box-shadow var(--motion-med) var(--ease-standard),
+        filter var(--motion-fast) var(--ease-standard);
     box-shadow: 0 4px 12px var(--primary-glow);
 }
 .feedback-send-btn:hover {
@@ -363,6 +374,13 @@
     box-shadow: 0 8px 20px var(--primary-glow);
 }
 .feedback-send-btn:active { transform: scale(.97); }
+
+.feedback-dm-list .dm-item,
+.feedback-messages-area .dm-bubble,
+#logsContainer .log-row,
+.analytics-grid .analytics-card {
+    animation: itemFadeUp var(--motion-med) var(--ease-emphasized);
+}
 
 /* Mobile — stack sidebar below */
 @media (max-width: 767px) {
